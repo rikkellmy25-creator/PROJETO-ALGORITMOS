@@ -89,7 +89,7 @@ while op!=0:
                                 tipo=input("TIPO DO ANIMAL:").upper()
                                 peso=input("PESO DO ANIMAL(KG):").upper()
                                 gestaçao=input("O ANIMAL É GESTANTE? (SIM) OU (NÃO)").upper()
-                                rebanho.append({"IDENTIFICAÇÃO DO ANIMAL":id_animal,"TIPO:":tipo,"PESO(KG)":peso,"GESTAÇÃO:":gestaçao})
+                                rebanho.append({"ID":id_animal,"TIPO:":tipo,"PESO(KG)":peso,"GESTAÇÃO:":gestaçao})
                                 print(F"ANIMAL ADICIONADO COM SUCESSO!")
                                 print(f"ID:{id_animal}, TIPO:{tipo}, PESO:{peso},GESTANTE:{gestaçao}")
                             elif opadm==2:
@@ -98,7 +98,7 @@ while op!=0:
                                 existe=False
                                 remv=int((input("QUAL ANIMAL VOCÊ QUER REMOVER? DIGITE O NÚMERO DE INDENTIFICAÇÃO:")))
                                 for i in rebanho:
-                                       if i["IDENTIFICAÇÃO DO ANIMAL"]==remv:
+                                       if i["ID"]==remv:
                                             rebanho.remove(i)
                                             existe=True
                                             print("ANIMAL REMOVIDO COM SUCESSO!")
@@ -111,7 +111,7 @@ while op!=0:
                                 print(rebanho)
                                 id_atualizar=int(input("DIGITE QUAL A IDENTIFICAÇÃO DO ANIMAL QUE VOCÊ QUER ATUALIZAR:"))
                                 for i in rebanho:
-                                     if i["IDENTIFICAÇÃO DO ANIMAL"]==id_atualizar:
+                                     if i["ID"]==id_atualizar:
                                           i["PESO(KG)"]=int(input("DIGITE O PESO ATUALIZADO DO ANIMAL: "))
                                           i["GESTAÇÃO"]=(input("DIGITE SE AINDA ESTÁ PRENHA O ANIMAL (SIM) OU (NÃO): "))
                                           print(F"ATUALIZAÇÃO BEM SUCEDIDADE{rebanho}")
@@ -192,7 +192,7 @@ while op!=0:
                                      update_estoque=int(input("DIGITE QUAL O PRODUTO VOCÊ QUER ATUALIZAR(ID): "))
                                      for i in estoque:
                                         if i["ID":id_produto]==update_estoque:
-                                             i["ID"]==int(input("DIGITE O ID ATUALIZADO: "))
+                                             i["ID"]=int(input("DIGITE O ID ATUALIZADO: "))
                                              i["PRODUTO"]=input("DIGITE QUAL O PRODUTO VOCÊ QUER ATUALIZAR:")
                                              i["QUANTIDADE"]=int(input("DIGITE A QUANTIDADE ATUALIZADA DO PRODUTO: "))
                                              i["PESO"]=int(input("DIGITE O PESO DO PRODUTO ATUALIZADO(KG): "))
@@ -206,10 +206,10 @@ while op!=0:
                                      prod_diaria=input("DIGITE O ID DO PRODUTO PRODUZIDO:")
                                      print(estoque)
                                      for i in estoque:
-                                          if i[id]==prod_diaria:
+                                          if i["ID"]==prod_diaria:
                                             i["QUANTIDADE"]=int(input(f"QUAL FOI A PRODUÇÃO DIÁRIA DO {produto}? "))
                                 for i in estoque:
-                                    if i["PRODUTO"] in estoque<5:
+                                    if i["QUANTIDADE"] in estoque<5:
                                         print(f"ALERTA!!!!!! O {i["PRODUTO"]} ESTÁ COM ESTOQUE BAIXO!")
                         if menuadm==3:
                                 print("MENU FINANCEIRO")
@@ -229,21 +229,21 @@ while op!=0:
                                     tipo="ENTRADA"
                                     financeiro.append({"VALOR:":valor,"DESCRIÇÃO:":desc,"ENTRADA:":tipo})
                                     print(F"VALOR:{valor}",f"DESCRIÇÃO:{desc}", "ADICIONADOS COM SUCESSO")
-                                if op_fin==2:
+                                elif op_fin==2:
                                     print("REGISTRAR SAIDA")
                                     valor=int(input("VALOR(R$):"))
                                     desc=input("DESCRIÇÃO:")
                                     tipo="SAIDA"
                                     financeiro.append({"VALOR:":valor,"DESCRIÇÃO:":desc,"SAIDA":tipo})
                                     print(F"VALOR:{valor}",f"DESCRIÇÃO:{desc}", "ADICIONADOS COM SUCESSO")
-                                if op_fin==3:
+                                elif op_fin==3:
                                     print("SALDO")
                                     saldo=0
                                     for valor in financeiro:
-                                        if valor[tipo]=="ENTRADA":
-                                            saldo+=valor[tipo]
-                                        elif valor[tipo]=="SAIDA":
-                                            saldo-=valor[tipo]
+                                        if valor["ENTRADA"]:
+                                            saldo+=valor["ENTRADA"]
+                                        elif valor["SAIDA"]=="SAIDA":
+                                            saldo-=valor["SAIDA"]
                                     print(F"O SALDO ATUAL É {saldo}")
                                 if op_fin==4:
                                     print("FILTRO POR TIPO(ENTRADA/SAIDA)")
