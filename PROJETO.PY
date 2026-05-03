@@ -134,7 +134,7 @@ while op!=0:
                                         if i["ID"]==reg_vacinas:
                                             id_animal=i["ID"]
                                             animal=input("DIGITE O TIPO DO ANIMAL:")
-                                            vacina=input("DIGITE O NOME DA VACINA:")
+                                            vacina_nome=input("DIGITE O NOME DA VACINA:")
                                             data=input("DIGITE A DATA DA VACINA(AA/MM/YY): ")
                                             prox_vacina=input("DIGITE A DATA DA PROXIMA VACINA(AA/MM/YY):")
                                         vacina.append({"ID:":id_animal,"ANIMAL:":animal,"VACINA:":vacina,"DATA":data,"PROXIMAS VACINA:":prox_vacina})
@@ -142,7 +142,7 @@ while op!=0:
                                 elif op_vacinas==2:
                                     print("PROXIMAS VACINAS A SEREM APLICADAS")
                                     for i in vacina:
-                                        if i["PROXIMAS VACINAS"]:
+                                        if i["PROXIMAS VACINAS:"]:
                                             print(F"AS PROXÍMAS VACINAS SÃO{i}")
                                 elif op_vacinas==3:
                                     print("VACINAS JÁ APLICADAS")
@@ -181,7 +181,7 @@ while op!=0:
                                     existe=False
                                     remv_produto=int(input("DIGITE O PRODUTO QUE VOCÊ QUER REMOVER(ID):"))
                                     for i in estoque:
-                                        if i["ID":id_produto]==remv_produto:
+                                        if i["ID"]==remv_produto:
                                             estoque.remove(i)
                                             print("PRODUTO REMOVIDO COM SUCESSO!")
                                         if not existe:
@@ -209,7 +209,7 @@ while op!=0:
                                           if i["ID"]==prod_diaria:
                                             i["QUANTIDADE"]=int(input(f"QUAL FOI A PRODUÇÃO DIÁRIA DO {produto}? "))
                                 for i in estoque:
-                                    if i["QUANTIDADE"] in estoque<5:
+                                    if i["QUANTIDADE"]<5:
                                         print(f"ALERTA!!!!!! O {i["PRODUTO"]} ESTÁ COM ESTOQUE BAIXO!")
                         if menuadm==3:
                                 print("MENU FINANCEIRO")
