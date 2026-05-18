@@ -186,7 +186,7 @@ while op!=0:
                                 rebanho.append([id_animal,tipo,peso,gestaçao, valor])
                                 print()
                                 print(F"ANIMAL ADICIONADO COM SUCESSO!")
-                                print(f"ID:{id_animal}, TIPO:{tipo}, PESO:{peso},GESTANTE:{gestaçao}, VALOR:{VALOR}")
+                                print(f"ID:{id_animal}, TIPO:{tipo}, PESO:{peso},GESTANTE:{gestaçao}, VALOR:{valor}")
                                 print()
                             elif opadm==2:
                                 print("REMOVER REBANHO")
@@ -625,42 +625,54 @@ SEJA BEM VINDO {usuario}
                          continue
                     if menu_user==1:
                         print('''
-01-COMPRAR ANIMAL
-02-COMPRAR PRODUTO      
+01-COMPRAR PRODUTO
+02-COMPRAR ANIMAL      
                                ''')  
                         op_compracliente=int(input("DIGITE A OPÇÃO DESEJADA: "))              
                         if op_compracliente==1:
-                            print('''
-    =========================
-    ESTOQUE DISPONÍVEL   
-    =========================
+                            produtos_comprados=[]
+                            total_geral=0
+                            continuar="SIM"
+                            while continuar=="SIM":
+                                    print('''
+=========================
+ESTOQUE DISPONÍVEL   
+=========================
     ''')
-                            if len(estoqueadm)==0:
-                                print("NENHUM PRODUTO DISPONÍVEL")
-                            elif len(estoqueadm)>=1:
-                                for i in estoqueadm:
-                                                print(f'''
-    ID: {i[0]})
-    PRODUTO: {i[1]})
-    QUANTIDADE:{i[2]})
-    PESO(KG): {i[3]})
-    VALOR(R$): R$ {i[4]})
-    VALIDADE: {i[5]}) 
-    TOTAL DE PRODUTOS: {len(estoqueadm)}     
-                                                ''')
-                            id_compra= int(input("DIGITE O ID DO PRODUTO QUE DESEJA ADQUIRIR: "))
-                            produto_existe= False
-                            for i in estoqueadm:
-                                if i[0]==id_compra:
-                                    produto_encontrado=True
-                                    quant_compra=int("DIGITE A QUANTIDADE QUE DESEJA COMPRAR: ")
-                                    if quant_compra<=0:
-                                        print("QUANTIDADE INVALIDA!")
-                                    elif quant_compra>i[2]:
-                                        print("QUANTIDADE ")
-                                    elif quant_compra<=i[2]:
-                                        total_compra=quant_compra*i[4]
-                                        print(f'''
+                                    if len(estoqueadm)==0:
+                                        print("NENHUM PRODUTO DISPONÍVEL")
+                                        continuar=="NÃO"
+                                    elif len(estoqueadm)>=1:
+                                        for i in estoqueadm:
+                                                    print(f'''
+ID: {i[0]})
+PRODUTO: {i[1]})
+QUANTIDADE:{i[2]})
+PESO(KG): {i[3]})
+VALOR(R$): R$ {i[4]})
+VALIDADE: {i[5]}) 
+TOTAL DE PRODUTOS: {len(estoqueadm)}     
+                                                    ''')
+                                    id_compra= int(input("DIGITE O ID DO PRODUTO QUE DESEJA ADQUIRIR: "))
+                                    produto_existe= False
+                                    for i in estoqueadm:
+                                        if i[0]==id_compra:
+                                            produto_encontrado=True
+                                            quant_compra=int(input("DIGITE A QUANTIDADE QUE DESEJA COMPRAR: "))
+                                        if quant_compra<=0:
+                                            print("QUANTIDADE INVALIDA!")
+                                        elif quant_compra>i[2]:
+                                            print("QUANTIDADE INVALIDA!")
+                                        elif quant_compra<=i[2]:
+                                            total_compra=quant_compra*i[4]
+                                            produtos_comprados.append([i[0], i[1], quant_compra, total_compra, "PRODUTO"])
+                                            total_geral=total_geral+total_compra
+                                            print("PRODUTO ADICIONADO A COMPRA!")
+                                        if produto_encontrado==False:
+                                            print("PRODUTO NÃO ENCONTRADO!")
+                                        continuar=input("DESEJA ADICIONAR OUTRO PRODUTO?(SIM/NÃO): ").upper()
+                                        if len(produtos_comprados)>0:
+                                            print(f'''
 =========================
     RESUMO DA COMPRA
 =========================
@@ -668,12 +680,17 @@ PRODUTO: {i[1]}
 QUANTIDADE: {quant_compra}
 VALOR UNITÁRIO: R$ {i[4]}
 TOTAL: R$ {total_compra}
-''')
-                                        confirmar=input("DESEJA CONFIRMAR A COMPRA? SIM/NAO: ").upper()
-                                        if confirmar=="SIM":
-                                            estoquecliente.append([i[0],i[1],quant_compra,total_compra,"PENDENTE"])
-                                            i[2]=i[2]-quant_compra
-                                            financeiro.append([total_compra, "PRODUTO VENDIDO", "ENTRADA"])
+    ''')
+                                            confirmar=input("DESEJA CONFIRMAR A COMPRA? SIM/NAO: ").upper()
+                                            if confirmar=="SIM":
+                                                id_compra_cliente=len(estoquecliente)+1
+                                                estoquecliente.append([id_compra_cliente, usuario, "PRODUTOS", produtos_comprados, total_geral, "PENDENTE", "PRODUTO"])
+                                                for produto in produtos_comprados:
+                                                    for i in estoqueadm:
+                                                        if i[0]==produto[0]:
+                                                            i[2]=i[2]-produto[2]
+                                                i[2]=i[2]-quant_compra
+                                                financeiro.append([total_compra, "PRODUTO VENDIDO", "ENTRADA"])
                                             print(F'''
 =========================
 COMPRA REALIZADA COM SUCESSO!
@@ -682,44 +699,44 @@ PRODUTO: {i[1]}")
 QUANTIDADE COMPRADA: {quant_compra}")
 VALOR TOTAL: R$ {total_compra}")
 STATUS DE RETIRADA: PENDENTE")                                  
-    ''')
+        ''')
                                         elif confirmar=="NÃO":
-                                            print("COMPRA CANCELADA!")
+                                                print("COMPRA CANCELADA!")
                                         else:
-                                            print("OPÇÃO INVALIDA! COMPRA CANCELADA")
+                                                print("OPÇÃO INVALIDA! COMPRA CANCELADA")
                                         if produto_encontrado==False:
-                                            print("PRODUTO/ANIMAL NÃO ENCONTRADO!")
-                        if op_compracliente==2:
-                            print('''
-=========================
-ESTOQUE DISPONÍVEL   
-=========================
-    ''')
-                            if len(rebanho)==0:
-                                print("NENHUM PRODUTO DISPONÍVEL")
-                            elif len(rebanho)>=1:
+                                                print("PRODUTO/ANIMAL NÃO ENCONTRADO!")
+                            if op_compracliente==2:
+                                print('''
+    =========================
+    ESTOQUE DISPONÍVEL   
+    =========================
+        ''')
+                                if len(rebanho)==0:
+                                    print("NENHUM PRODUTO DISPONÍVEL")
+                                elif len(rebanho)>=1:
+                                    for i in rebanho:
+                                                    print(f'''
+    ID: {i[0]})
+    ANIMAL: {i[1]})
+    PESO(KG): {i[2]})
+    GESTANTE: {i[3]}) 
+    VALOR(R$): R$ {i[4]})
+    TOTAL DE PRODUTOS: {len(rebanho)}     
+                                                    ''')
+                                id_compra= int(input("DIGITE O ID DO PRODUTO QUE DESEJA ADQUIRIR: "))
+                                produto_existe= False
                                 for i in rebanho:
-                                                print(f'''
-ID: {i[0]})
-ANIMAL: {i[1]})
-PESO(KG): {i[2]})
-GESTANTE: {i[3]}) 
-VALOR(R$): R$ {i[4]})
-TOTAL DE PRODUTOS: {len(rebanho)}     
-                                                ''')
-                            id_compra= int(input("DIGITE O ID DO PRODUTO QUE DESEJA ADQUIRIR: "))
-                            produto_existe= False
-                            for i in rebanho:
-                                if i[0]==id_compra:
-                                    produto_encontrado=True
-                                    quant_compra=int("DIGITE A QUANTIDADE QUE DESEJA COMPRAR: ")
-                                    if quant_compra<=0:
-                                        print("QUANTIDADE INVALIDA!")
-                                    elif quant_compra>i[2]:
-                                        print("QUANTIDADE ")
-                                    elif quant_compra<=i[2]:
-                                        total_compra=quant_compra*i[4]
-                                        print(f'''
+                                    if i[0]==id_compra:
+                                        produto_existe=True
+                                        quant_compra=int("DIGITE A QUANTIDADE QUE DESEJA COMPRAR: ")
+                                        if quant_compra<=0:
+                                            print("QUANTIDADE INVALIDA!")
+                                        elif quant_compra>i[2]:
+                                            print("QUANTIDADE ")
+                                        elif quant_compra<=i[2]:
+                                            total_compra=quant_compra*i[4]
+                                            print(f'''
     =========================
         RESUMO DA COMPRA
     =========================
@@ -727,13 +744,13 @@ TOTAL DE PRODUTOS: {len(rebanho)}
     QUANTIDADE: {quant_compra}
     VALOR UNITÁRIO: R$ {i[4]}
     TOTAL: R$ {total_compra}
-    ''')
-                                        confirmar=input("DESEJA CONFIRMAR A COMPRA? SIM/NAO: ").upper()
-                                        if confirmar=="SIM":
-                                            estoquecliente.append([i[0],i[1],quant_compra,total_compra,"PENDENTE"])
-                                            i[2]=i[2]-quant_compra
-                                            financeiro.append([total_compra, "PRODUTO VENDIDO", "ENTRADA"])
-                                            print(F'''
+        ''')
+                                            confirmar=input("DESEJA CONFIRMAR A COMPRA? SIM/NAO: ").upper()
+                                            if confirmar=="SIM":
+                                                estoquecliente.append([i[0],i[1],quant_compra,total_compra,"PENDENTE"])
+                                                i[2]=i[2]-quant_compra
+                                                financeiro.append([total_compra, "PRODUTO VENDIDO", "ENTRADA"])
+                                                print(F'''
     =========================
     COMPRA REALIZADA COM SUCESSO!
     =========================
@@ -741,99 +758,98 @@ TOTAL DE PRODUTOS: {len(rebanho)}
     QUANTIDADE COMPRADA: {quant_compra}")
     VALOR TOTAL: R$ {total_compra}")
     STATUS DE RETIRADA: PENDENTE")                                  
-    ''')
-                                        elif confirmar=="NÃO":
-                                            print("COMPRA CANCELADA!")
-                                        else:
-                                            print("OPÇÃO INVALIDA! COMPRA CANCELADA")
-                                        if produto_encontrado==False:
-                                            print("PRODUTO/ANIMAL NÃO ENCONTRADO!")
-                            print('''
-    =========================
-        AGENDAR RETIRADA
-    =========================
-    ''')
-                            retirada_pendente=False
-                            print("RETIRADAS PENDENTES: ")
-                            for i in estoquecliente:
-                                if i[5]=="ABERTO":
-                                    retirada_pendente:True
-                                    print(f'''
+        ''')
+                                            elif confirmar=="NÃO":
+                                                print("COMPRA CANCELADA!")
+                                            else:
+                                                print("OPÇÃO INVALIDA! COMPRA CANCELADA")
+                                            if produto_encontrado==False:
+                                                print("PRODUTO/ANIMAL NÃO ENCONTRADO!")
+                                print('''
+        =========================
+            AGENDAR RETIRADA
+        =========================
+        ''')
+                                retirada_pendente=False
+                                print("RETIRADAS PENDENTES: ")
+                                for i in estoquecliente:
+                                    if i[5]=="ABERTO":
+                                        retirada_pendente:True
+                                        print(f'''
     ID DO PRODUTO/ANIMAL: {i[1]}
     PRODUTO: {i[2]}
     QUANTIDADE: {i[3]}
     TOTAL PAGO: R$ {i[4]}
     STATUS: {i[5]}
-                ''')
-                                if retirada_pendente==False:
-                                    print("NÃO POSSUI RETIRADAS PENDENTE!")
-                                if retirada_pendente==True:
-                                    for i in estoquecliente:
-                                        i[1]==id_retirada and i[5]=="ABERTO":
-                                        data=input("DIGITE A DATA DA RETIRADA(AA/MM/YY): ")
-                                        hora=input("DIGITE A HORA DA RETIRADA(HH:MM): ")
-                                        status="PENDENTE"
-                                        retiradas.append([i[1], i[2], i[3], data, hora, status])
-                                        i[5]="RETIRADA AGENDADA"
-                                        print(F'''
-    =========================
-    RETIRADA AGENDADA COM SUCESSO!
-    =========================
-    PRODUTO: {i[2]}
-    QUANTIDADE: {i[3]}
-    DATA: {data}
-    HORA: {hora}
-    STATUS: {status}
-    ''')
+                    ''')
+                                    if retirada_pendente==False:
+                                        print("NÃO POSSUI RETIRADAS PENDENTE!")
+                                    if retirada_pendente==True:
+                                        for i in estoquecliente:
+                                            if i[1]==id_retirada and i[5]=="ABERTO":
+                                                data=input("DIGITE A DATA DA RETIRADA(AA/MM/YY): ")
+                                                hora=input("DIGITE A HORA DA RETIRADA(HH:MM): ")
+                                                status="PENDENTE"
+                                                retiradas.append([i[1], i[2], i[3], data, hora, status])
+                                                i[5]="RETIRADA AGENDADA"
+                                            print(F'''
+=========================
+RETIRADA AGENDADA COM SUCESSO!
+=========================
+PRODUTO: {i[2]}
+QUANTIDADE: {i[3]}
+DATA: {data}
+HORA: {hora}
+STATUS: {status}
+        ''')
 
-                                                                        
+                        #if menu_user==3:
+                                                                                
 
 
-                            
-                                    
-                                    
+                                
+                                        
+                                        
 
+
+                                            
+                                                
+
+
+
+                                            
+                                                
 
                                         
+
+
                                             
 
 
-
-                                        
                                             
+                                                                            
+                                    
+                                    
+                                            
+
+                                    
+                                    
 
                                     
 
 
-                                        
 
+    elif not loginadm:
+        print("USUARIO OU SENHA INVALIDO! ")
+        continue
+    elif not loginusuario:
+        print("USUARIO OU SENHA INVALIDO! ")
+        continue
 
-                                        
-                                                                        
-                                
-                                
-                                        
-
-                                
-                                
-
-                                
-
-
-
-
-
-            elif not loginadm:
-                    print("USUARIO OU SENHA INVALIDO! ")
-                    continue
-            elif not loginusuario:
-                    print("USUARIO OU SENHA INVALIDO! ")
-                    continue
-
-                
                     
-                
+                        
+                    
 
-        
-                
+            
+                    
 
