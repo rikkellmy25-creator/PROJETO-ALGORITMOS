@@ -1,8 +1,11 @@
+import cadastro_login
+
+
 print("-"*50)
 print("Sistema de Gestão Agropecuária (Fazenda Sertão)".upper())
 
 iniciar=1
-
+loginadm=False
 adm=[]
 cliente=[]
 rebanho=[]
@@ -23,7 +26,7 @@ while iniciar!=0:
 01-CADASTRAR       
 02-LOGIN           
 ====================               
-    ''')
+''')
     menu=int(input("Digite a opção desejada: "))
     print()
             
@@ -36,92 +39,17 @@ while iniciar!=0:
 02-CLIENTE
 03-VOLTAR
 ====================
-        ''')
+''')
         print()
         cadastrar=int(input("Digite a opção desejada: "))
         print()
         if cadastrar==1:
-            usuario=input("DIGITE O USUARIO: ")
-            senha= input("DIGITE A SUA SENHA(8 DÍGITOS, 1 LETRA MAISCULA E 01 CARACTERE ESPECIAL): ")
-            cadastrado=False
-            maiuscula_user=False
-            maiuscula_senha=False
-            senha_espec=False
-            user_espec=False
-            for i in usuario:
-                 if i.isupper():
-                      maiuscula_user=True
-                 continue
-            if len(usuario)<5:
-                 print()
-                 print("USUARIO INVALIDO, MÍNIMO 5 DÍGITOS")
-                 print()
-                 continue
-            for i in senha:
-                if i.isupper():
-                      maiuscula_senha=True
-                if i in carac_especiais:
-                     senha_espec=True
-            if len(senha)<8 or not maiuscula_senha or not senha_espec:
-                 print()
-                 print("SENHA INVALIDA!!")
-                 print()
-                 continue
-                     
-            
-            for i in adm:
-                if i[0]==usuario and i[1] == senha:
-                    print()
-                    print("USUARIO JÁ CADASTRADO")
-                    print()
-                    cadastrado=True
-                    continue
-            if not cadastrado:
-                    adm.append([usuario,senha])
-                    print()
-                    print("USUARIO CADASTRADO COM SUCESSO!" )
-                    print()
+            cadastro_login.cadastro(adm)
         elif cadastrar==2:
-            print()
-            usuario=input("DIGITE O USUARIO: ")
-            senha= input("DIGITE A SUA SENHA(8 DÍGITOS, 1 LETRA MAISCULA E 01 CARACTERE ESPECIAL): ")
-            print()
-            cadastrado=False
-            maiuscula_user=False
-            maiuscula_senha=False
-            senha_espec=False
-            user_espec=False
-            for i in usuario:
-                 if i.isupper():
-                      maiuscula_user=True
-                 continue
-            if len(usuario)<5:
-                 print()
-                 print("USUARIO INVALIDO, MÍNIMO 5 DÍGITOS")
-                 print()
-                 continue
-            for i in senha:
-                if i.isupper():
-                      maiuscula_senha=True
-                if i in carac_especiais:
-                     senha_espec=True
-            if len(senha)<8 or not maiuscula_senha or not senha_espec:
-                 print("SENHA INVALIDA")
-                 continue
-            for i in cliente:
-                if i[0]==usuario and i[1] == senha:
-                    print("USUARIO JÁ CADASTRADO")
-                    cadastrado=True
-                    continue
-            if not cadastrado:
-                    cliente.append([usuario,senha])
-                    print("USUARIO CADASTRADO COM SUCESSO!") 
+            cadastro_login.cadastro(cliente)
         elif cadastrar==3:
-             continue
-            
+            continue
     if menu==2:
-        loginadm = False
-        loginusuario = False
         print(f'''
 ====================
         MENU
@@ -130,29 +58,20 @@ while iniciar!=0:
 02-CLIENTE
 03-VOLTAR
 ====================
-        ''')
+''')
         perm_login=int(input("DIGITE A OPÇÃO DESEJADA: "))
         if perm_login==3:
             continue
         elif perm_login==1:
-            usuario=input("DIGITE SEU USUÁRIO: ")
-            senha=input("DIGITE SUA SENHA: ")
-            for i in adm:
-                if i[0]==usuario and i[1]==senha:
-                    print("LOGIN REALIZADO COM SUCESSO! ")
-                    loginadm=True
+            cadastro_login.login(adm)
         elif perm_login==2:
-            usuario=input("DIGITE SEU USUÁRIO: ")
-            senha=input("DIGITE SUA SENHA: ")
-            for i in cliente:
-                if i[0]==usuario and i[1]==senha:
-                    print("LOGIN REALIZADO COM SUCESSO! ")
-                    loginusuario=True
-        if loginadm==True:
+            cadastro_login.login(cliente)
+
+        if cadastro_login.login(adm):
                 opadm=0
                 while opadm>=0:
                         print()
-                        print(f"SEJA BEM VINDO {usuario}!")
+                        print(f"SEJA BEM VINDO {cadastro_login.get_usuario()}!")
                         print("="*30)
                         print("MENU ADM")
                         print("01-GERENCIAR REBANHO")
@@ -306,6 +225,15 @@ TIPO={i[1]}
                                 elif op_vacinas==4:
                                      continue
                             elif opadm==6:
+                                 print("LISTAR UM PRODUTO SÓ")
+                                 for i in estoqueadm:
+                                      if i[2]==1:
+                                            print(i[0])
+                                            print(i[1])
+                                            print(i[2])
+                                           
+                                           
+                            elif opadm==7:
                                  continue
                         elif menuadm==2:
                                 print("="*15,"GESTÃO PRODUÇÃO", "="*15)
@@ -314,7 +242,8 @@ TIPO={i[1]}
                                 print("03-ATUALIZAR QUANTIDADE DE ITENS")
                                 print("04-LISTAR ESTOQUE")
                                 print("05-ADICIONAR PRODUÇÃO DIÁRIA")
-                                print("06-VOLTAR")
+                                print("06-LISTAR UM PRODUTO ESPECIFICO")
+                                print("07-VOLTAR")
                                 print()
                                 opadm=int(input("DIGITE A OPÇÃO DESEJADA:"))
                                 print()
@@ -643,9 +572,9 @@ TOTAL DE PRODUTOS: {len(estoqueadm)}
                              
                     
 
-        elif loginusuario==True:
-                op_user=0
-                while op_user>=0:
+        elif cadastro_login.login(cliente):
+            # op_user=0
+            while op_user>=0:
                     print(f'''
 SEJA BEM VINDO {usuario}
 
