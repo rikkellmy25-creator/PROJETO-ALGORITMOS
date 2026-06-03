@@ -30,4 +30,4 @@ def cadastro_cliente(cliente):
         print()
         print("USUARIO CADASTRADO COM SUCESSO!" )
         print()
-        return clientea
+        return cliente
