@@ -1,7 +1,7 @@
 import cadastro
 import login
 import funcadm
-import questionary
+#import questionary
 print("-"*50)
 print("Sistema de Gestão Agropecuária (Fazenda Sertão)".upper())
 
@@ -111,16 +111,7 @@ while iniciar!=0:
                             elif op_vacinas==3:
                                 funcadm.vacinaapl()
                             elif op_vacinas==4:
-                                    continue
-                        elif opadm==6:
-                                print("LISTAR UM PRODUTO SÓ")
-                                for i in estoqueadm:
-                                    if i[2]==1:
-                                        print(i[0])
-                                        print(i[1])
-                                        print(i[2])
-                                        
-                                        
+                                continue
                         elif opadm==7:
                                 continue
                     elif menuadm==2:
@@ -136,168 +127,36 @@ while iniciar!=0:
                             opadm=int(input("DIGITE A OPÇÃO DESEJADA:"))
                             print()
                             if opadm==1:
-                                id_produto=len(estoqueadm)+1
-                                produto=input("DIGITE O PRODUTO A SER ADICIONADO:  ")
-                                quantidade=int(input("DIGITE A QUANTIDADE DE ITENS: "))
-                                peso=int(input("DIGITE O PESO(KG/L): "))
-                                valor=int(input("DIGITE O VALOR DO PRODUTO(R$): "))
-                                validade=(input("DIGITE A VALIDADE DO PRODUTO(AA/MM/YY): "))
-                                estoqueadm.append([id_produto, produto, quantidade,peso,valor,validade])
-                                print(f'''      
-===============================
-Produto adicionado com sucesso!
-===============================
-ID:{id_produto}
-PRODUTO:{produto}
-QUANTIDADE:{quantidade}
-PESO(KG/L):{peso}
-VALOR(R$):{valor}
-VALIDADE(AA/MM/YY):{validade}
-===============================
-                        ''')
+                                funcadm.addestoque(estoqueadm)
                             elif opadm==2:
-                                print("="*15,"REMOÇÃO DE PRODUTO","="*15)
-                                for i in estoqueadm:
-                                        print(f'''
-ID: {i[0]}
-PRODUTO: {i[1]}
-QUANTIDADE:{i[2]}
-PESO(KG/L): {i[3]}
-VALOR(R$): R$ {i[4]}
-VALIDADE: {i[5]}
-TOTAL DE PRODUTOS: {len(estoqueadm)}     
-''')
-                                existe=False
-                                remv_produto=int(input("DIGITE O PRODUTO QUE VOCÊ QUER REMOVER(ID):"))
-                                for i in estoqueadm:
-                                    if i[0]==remv_produto:
-                                        estoqueadm.remove(i)
-                                        print("PRODUTO REMOVIDO COM SUCESSO!")
-                                        existe=True
-                                if not existe:
-                                        print("PRODUTO NÃO ENCONTRADO!")
+                                funcadm.remvestoque(estoqueadm)
                             elif opadm==3:
-                                print("="*15,"ATUALIZAR PRODUTO", "="*15)
-                                for i in estoqueadm:
-                                        print(f'''
-ID: {i[0]}
-PRODUTO: {i[1]}
-QUANTIDADE:{i[2]}
-PESO(KG/L): {i[3]}
-VALOR(R$): R$ {i[4]}
-VALIDADE: {i[5]}
-TOTAL DE PRODUTOS: {len(estoqueadm)}     
-''')
-                                update_estoque=int(input("DIGITE QUAL O PRODUTO VOCÊ QUER ATUALIZAR(ID): "))
-                                for i in estoqueadm:
-                                    if i[0]==update_estoque:
-                                            i[0]=int(input("DIGITE O ID ATUALIZADO: "))
-                                            i[1]=input("DIGITE QUAL O NOVO PRODUTO:")
-                                            i[2]=int(input("DIGITE A QUANTIDADE ATUALIZADA DO PRODUTO: "))
-                                            i[3]=int(input("DIGITE O PESO/VOLUME DO PRODUTO ATUALIZADO(KG/L): "))
-                                            i[4]=int(input("DIGITE O VALOR DO PRODUTO ATUALIZADO(R$): "))
-                                            i[5]=input("DIGITE A VALIDADE ATUALIZADA DO PRODUTO(AA/MM/YY):")
-                                            print(f'''      
-===============================
-PRODUTO ATUALIZADO COM SUCESSO!
-===============================
-''')
+                                funcadm.atualizarproduto(estoqueadm)
                             elif opadm==4:
-                                print("="*15,"ESTOQUE","="*15)
-                                if len(estoqueadm)==0:
-                                    print("NENHUM PRODUTO DISPONÍVEL!")
-                                else:
-                                    for i in estoqueadm:
-                                        print(f'''
-ID: {i[0]}
-PRODUTO: {i[1]}
-QUANTIDADE:{i[2]}
-PESO(KG/L): {i[3]}
-VALOR(R$): R$ {i[4]}
-VALIDADE: {i[5]}
-TOTAL DE PRODUTOS: {len(estoqueadm)}     
-''')
+                                funcadm.listarestoqueadm(estoqueadm)
                             elif opadm==5:
-                                print("="*10,"PRODUÇÃO DIÁRIA",)
-                                encontrado=False
-                                for i in estoqueadm:
-                                        print(f'''
-ID: {i[0]}
-PRODUTO: {i[1]}
-QUANTIDADE:{i[2]}
-PESO(KG/L): {i[3]}
-VALOR(R$): R$ {i[4]}
-VALIDADE: {i[5]}
-TOTAL DE PRODUTOS: {len(estoqueadm)}     
-                                        ''')
-                                prod_diaria=int(input("DIGITE O ID DO PRODUTO PRODUZIDO:"))
-                                for i in estoqueadm:
-                                    if i[0]==prod_diaria:
-                                        quant_diaria=int(input("QUAL FOI A PRODUÇÃO DIARIA?"))
-                                        i[2]+=quant_diaria
-                                        print("PRODUÇÃO DIARIA CADASTRADA COM SUCESSO")
-                                        encontrado=True
-                                if not encontrado:
-                                        print("PRODUTO NÃO ENCONTRADO!")
-                            for i in estoqueadm:
-                                if i[2]<5:
-                                    print(f"ALERTA!!!!!! O {i[1]} ESTÁ COM ESTOQUE BAIXO!")
+                                funcadm.prodiaria(estoqueadm)
                     elif menuadm==3:
                             print("MENU FINANCEIRO")
                             print("01-REGISTRAR ENTRADA")
                             print("02-REGISTRAR SAIDA")
                             print("03-VER SALDO")
-                            print("04-FILTRAR POR TIPO(ENTRADA/SAIDA)")
-                            print("05-VER TOTAL DE ENTRADAS")
-                            print("06-VER TOTAL DE SAIDAS")
-                            print("07-VOLTAR")
+                            print("04-VER TOTAL DE ENTRADAS")
+                            print("05-VER TOTAL DE SAIDAS")
+                            print("06-VOLTAR")
                             op_fin=int(input("DIGITE A OPÇÃO DESEJADA: "))
 
                             if op_fin==1:
-                                print("REGISTRAR ENTRADA")
-                                valor=int(input("VALOR(R$): "))
-                                desc=input("DESCRIÇÃO: ")
-                                financeiro.append([valor,desc, "ENTRADA"])
-                                print(F"ENTRADA ADICIONADA COM SUCESSO")
+                                funcadm.regentrada(financeiro)
                             elif op_fin==2:
-                                print("REGISTRAR SAIDA")
-                                valor=int(input("VALOR(R$):"))
-                                desc=input("DESCRIÇÃO:")
-                                tipo="SAIDA"
-                                financeiro.append([valor,desc,"SAIDA"])
-                                print("SAIDA ADICIONADA COM SUCESSO")
+                                funcadm.regsaida(financeiro)
                             elif op_fin==3:
-                                print("SALDO")
-                                saldo=0
-                                for item in financeiro:
-                                    if item[2]=="ENTRADA":
-                                        saldo += int(item[0])
-                                    elif item[2]=="SAIDA":
-                                        saldo -= int(item[0])
-                                print(F"O SALDO ATUAL É {saldo} R$")
-                            if op_fin==4:
-                                print("FILTRO POR TIPO(ENTRADA/SAIDA)")
-                                tipo=input("DIGITE QUAL O FILTRO(ENTRADA/SAIDA): ").upper()
-                                existe=False
-                                for i in financeiro:
-                                    if i[2]==tipo:
-                                        print(f"VALOR: R${i[0]} | DESCRIÇÃO: {i[1]} | TIPO: {i[2]}")
-                                        existe=True
-                                if not existe:
-                                    print(f"NENHUM REGISTRO DO TIPO {tipo} ENCONTRADO!")
-                            if op_fin==5:
-                                total=0
-                                for i in financeiro:
-                                    if i[2]=="ENTRADA":
-                                        total+=int(i[0])
-                                print("TOTAL DE ENTRADAS:", total)
-                            if op_fin==6:
-                                total=0
-                                for i in financeiro:
-                                    if i[2]=="SAIDA":
-                                        total+=int(i[0])
-                                print("TOTAL DE SAIDAS:", total)
-                            if op_fin==7:
+                                funcadm.saldo(financeiro)
+                            elif op_fin==4:
+                                funcadm.total_entrada(financeiro)
+                            elif op_fin==5:
+                                funcadm.total_saida(financeiro)
+                            elif op_fin==6:
                                 continue
                     elif menuadm==4:
                         print('''

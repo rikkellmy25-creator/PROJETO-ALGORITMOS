@@ -1,8 +1,8 @@
 import login
 def selecadm(usuario):
     print(f"""
-\nSEJA BEM VINDO!
-{usuario}!\n
+SEJA BEM VINDO!
+{usuario}!
 ===============================
         MENU ADM
 01-GERENCIAR REBANHO
@@ -39,14 +39,12 @@ QUANTIDADE:{quantidade}
 
 
 def listarrebanho(rebanho):
+    if len(rebanho)==0:
+        print("NENHUM PRODUTO DISPONÍVEL!")
     for i in rebanho:
-        print(f"ID={i["ID"]}")
-        print(f"TIPO={i["TIPO"]}")
-        print(f"PESO={i["PESO"]}")
-        print(f"GESTACÃO={i["GESTACAO"]}")
-        print(f"VALOR={i["VALOR"]}")
-        print(f"QUANTIDADE={i["QUANTIDADE"]}")
-        print("="*15)
+        print(f'ID: {i["ID"]} | TIPO: {i["TIPO"]} | PESO: {i["PESO"]}| GESTAÇÃO: {i["GESTACAO"]}| VALOR: {i["VALOR"]}| QUANTIDADE: {i["QUANTIDADE"]}')
+    print(f'\nTOTAL DE ANIMAIS: {sum(i["QUANTIDADE"] for i in rebanho)}')
+
 def removeranimal(rebanho):
     listarrebanho(rebanho)
     for i in rebanho:
@@ -131,3 +129,138 @@ def vacinaapl(vacina):
             print(i[0],i[1],i[2],i[3])
     if not vacina_aplc:
             print("NENHUMA VACINA APLICADA")
+
+
+
+
+def addestoque(estoqueadm):
+    id_produto=len(estoqueadm)+1
+    produto=input("DIGITE O PRODUTO A SER ADICIONADO:  ")
+    quantidade=int(input("DIGITE A QUANTIDADE DE ITENS: "))
+    peso=int(input("DIGITE O PESO(KG/L): "))
+    valor=int(input("DIGITE O VALOR DO PRODUTO(R$): "))
+    validade=(input("DIGITE A VALIDADE DO PRODUTO(AA/MM/YY): "))
+    estoqueadm.append({"ID":id_produto, "PRODUTO":produto, "QUANTIDADE":quantidade,"PESO":peso,"VALOR":valor,"VALIDADE":validade})
+    print(f'''      
+===============================
+Produto adicionado com sucesso!
+===============================
+ID: {id_produto}
+PRODUTO: {produto}
+QUANTIDADE: {quantidade}
+PESO(KG/L): {peso}
+VALOR(R$): {valor}
+VALIDADE(AA/MM/YY): {validade}
+===============================
+                        ''')
+    
+
+
+def listarestoqueadm(estoqueadm):
+    if len(estoqueadm)==0:
+        print("NENHUM PRODUTO DISPONÍVEL!")
+    for i in estoqueadm:
+        print(f'ID: {i["ID"]} | PRODUTO: {i["PRODUTO"]} | QUANTIDADE: {i["QUANTIDADE"]}')
+    print(f'\nTOTAL DE PRODUTOS: {sum(i["QUANTIDADE"] for i in estoqueadm)}')
+
+
+def remvestoque(estoqueadm):
+    print("="*15,"REMOÇÃO DE PRODUTO","="*15)
+    listarestoqueadm(estoqueadm)
+    existe=False
+    remv_produto=int(input("DIGITE O PRODUTO QUE VOCÊ QUER REMOVER(ID):"))
+    for i in estoqueadm:
+        if i[0]==remv_produto:
+            estoqueadm.remove(i)
+            print("PRODUTO REMOVIDO COM SUCESSO!")
+            existe=True
+    if not existe:
+        print("PRODUTO NÃO ENCONTRADO!")
+
+
+def atualizarproduto(estoqueadm):
+    print("="*15,"ATUALIZAR PRODUTO", "="*15)
+    listarestoqueadm
+    update_estoque=int(input("DIGITE QUAL O PRODUTO VOCÊ QUER ATUALIZAR(ID): "))
+    for i in estoqueadm:
+        if i["ID"]==update_estoque:
+                i["ID"]=int(input("DIGITE O ID ATUALIZADO: "))
+                i["PRODUTO"]=input("DIGITE QUAL O NOVO PRODUTO:")
+                i["QUANTIDADE"]=int(input("DIGITE A QUANTIDADE ATUALIZADA DO PRODUTO: "))
+                i["PESO"]=int(input("DIGITE O PESO/VOLUME DO PRODUTO ATUALIZADO(KG/L): "))
+                i["VALOR"]=int(input("DIGITE O VALOR DO PRODUTO ATUALIZADO(R$): "))
+                i["VALIDADE"]=input("DIGITE A VALIDADE ATUALIZADA DO PRODUTO(AA/MM/YY):")
+                print(f'''      
+===============================
+PRODUTO ATUALIZADO COM SUCESSO!
+===============================
+''')
+
+def prodiaria(estoqueadm):
+    print("="*10,"PRODUÇÃO DIÁRIA",)
+    encontrado=False
+    listarestoqueadm()
+    prod_diaria=int(input("DIGITE O ID DO PRODUTO PRODUZIDO:"))
+    for i in estoqueadm:
+        if i["ID"]==prod_diaria:
+            quant_diaria=int(input("QUAL FOI A PRODUÇÃO DIARIA?"))
+            i["QUANTIDADE"]+=quant_diaria
+            print("PRODUÇÃO DIARIA CADASTRADA COM SUCESSO")
+            encontrado=True
+        if not encontrado:
+            print("PRODUTO NÃO ENCONTRADO!")
+        for i in estoqueadm:
+            if i["QUANTIDADE"]<5:
+             print(f"ALERTA!!!!!! O {i[1]} ESTÁ COM ESTOQUE BAIXO!")
+
+
+def regentrada(financeiro):
+    print("REGISTRAR ENTRADA")
+    valor=int(input("VALOR(R$): "))
+    desc=input("DESCRIÇÃO: ")
+    tipo="ENTRADA"
+    financeiro.append({"VALOR":valor,"DESCRIÇÃO":desc, "ENTRADA":tipo})
+    print(F"ENTRADA ADICIONADA COM SUCESSO")
+    print(f"VALOR:{valor} | DESCRIÇÃO:{desc}  | TIPO: {tipo}")
+    print("="*15)
+
+
+def regsaida(financeiro):
+    print("REGISTRAR saida")
+    valor=int(input("VALOR(R$): "))
+    desc=input("DESCRIÇÃO: ")
+    tipo="SAIDA"
+    financeiro.append({"VALOR":valor,"DESCRIÇÃO":desc, "SAIDA":tipo})
+    print(F"ENTRADA ADICIONADA COM SUCESSO")
+    print(f"VALOR:{valor} | DESCRIÇÃO:{desc}  | TIPO: {tipo}")
+    print("="*15)
+
+
+
+def saldo(financeiro):
+    print("SALDO")
+    saldo=0
+    for item in financeiro:
+        if item["ENTRADA"]=="ENTRADA":
+            saldo += int(item["VALOR"])
+        elif item["SAIDA"]=="SAIDA":
+            saldo -= int(item["VALOR"])
+    print(F"O SALDO ATUAL É {saldo} R$")
+
+
+
+
+def total_entrada(financeiro):
+    total=0
+    for i in financeiro:
+        if i["ENTRADA"]:
+            total+=int(i["VALOR"])
+    print("TOTAL DE ENTRADAS:", total)
+
+
+def total_saida(financeiro):
+    total=0
+    for i in financeiro:
+        if i["SAIDA"]:
+            total-=int(i["VALOR"])
+    print("TOTAL DE ENTRADAS:", total)
