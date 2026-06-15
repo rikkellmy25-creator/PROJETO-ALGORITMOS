@@ -7,7 +7,7 @@ def login_adm(adm):
             logado=True
     if logado:
         print("LOGIN REALIZADO COM SUCESSO")
-    elif logado==False:
+    else:
         print("USUÁRIO OU SENHA INCORRETOS!")
     return logado, usuario
 
@@ -21,6 +21,6 @@ def login_cliente(cliente):
             logado=True
     if logado:
         print("LOGIN REALIZADO COM SUCESSO")
-    elif logado==False:
+    else:
         print("USUÁRIO OU SENHA INCORRETOS!")
     return logado, usuario
