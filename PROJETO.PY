@@ -1,11 +1,13 @@
-import cadastro_login
-
-
+import cadastro
+import login
+import funcadm
+#import questionary
 print("-"*50)
 print("Sistema de Gestão Agropecuária (Fazenda Sertão)".upper())
 
+
+
 iniciar=1
-loginadm=False
 adm=[]
 cliente=[]
 rebanho=[]
@@ -17,6 +19,7 @@ retiradas=[]
 carac_especiais= "!@#$%&*()-_=+[]{}|;:,.<>?/"
 propostas=[]
 compras_cliente=[]
+
 
 while iniciar!=0:
     print('''
@@ -44,9 +47,9 @@ while iniciar!=0:
         cadastrar=int(input("Digite a opção desejada: "))
         print()
         if cadastrar==1:
-            cadastro_login.cadastro(adm)
+            cadastro.cadastro_adm(adm)
         elif cadastrar==2:
-            cadastro_login.cadastro(cliente)
+            cadastro.cadastro_cliente(cliente)
         elif cadastrar==3:
             continue
     if menu==2:
@@ -63,520 +66,184 @@ while iniciar!=0:
         if perm_login==3:
             continue
         elif perm_login==1:
-            cadastro_login.login(adm)
-        elif perm_login==2:
-            cadastro_login.login(cliente)
-
-        if cadastro_login.login(adm):
-                opadm=0
-                while opadm>=0:
-                        print()
-                        print(f"SEJA BEM VINDO {cadastro_login.get_usuario()}!")
+            logadoadm,usuario=login.login_adm(adm)
+            if logadoadm==True: 
+                while True:
+                    funcadm.selecadm(usuario)
+                    menuadm=int(input("DIGITE A OPÇÃO DESEJADA: "))
+                    print()
+                    #if menuadm==7:
+                    if menuadm==1:
                         print("="*30)
-                        print("MENU ADM")
-                        print("01-GERENCIAR REBANHO")
-                        print("02-GERENCIAR PRODUÇÃO/ESTOQUE") 
-                        print("03-FINANCEIRO")
-                        print("04-RETIRADAS")
-                        print("05-RELATÓRIOS")
-                        print("06-GESTÃO DE PROPOSTAS")
-                        print("07-SAIR")
+                        print("01-ADICIONAR ANIMAL")
+                        print("02-REMOVER ANIMAL")
+                        print("03-EDITAR ANIMAL")
+                        print("04-LISTAR ANIMAIS DO REBANHO")
+                        print("05-VACINAS")
+                        print("06-VOLTAR")
                         print()
-                        menuadm=int(input("DIGITE A OPÇÃO DESEJADA: "))
+                        opadm=int(input("DIGITE A OPÇÃO DESEJADA: "))
                         print()
-                        if menuadm==7:
-                            break
-                        elif menuadm==1: #opção 1 do menu
-                            print("="*30)
-                            print("01-ADICIONAR ANIMAL")
-                            print("02-REMOVER ANIMAL")
-                            print("03-EDITAR ANIMAL")
-                            print("04-LISTAR ANIMAIS DO REBANHO")
-                            print("05-VACINAS")
-                            print("06-VOLTAR")
+                        if opadm==1:
+                            funcadm.adicionaranimal(rebanho)
+                        elif opadm==2:
+                            funcadm.removeranimal(rebanho)
+                        elif opadm==3:
+                            funcadm.atualizaranimal(rebanho)
+                        elif opadm==4:
+                            funcadm.listarrebanho(rebanho)
+                        elif opadm==5:
                             print()
-                            opadm=int(input("DIGITE A OPÇÃO DESEJADA: "))
+                            print("="*10,"VACINAS","="*10)
+                            print("01-REGISTRAR VACINA")
+                            print("02-PROXIMAS VACINAS")
+                            print("03-LISTAR VACINAS")
+                            print("04-Voltar")
+                            print()
+                            op_vacinas=int(input("DIGITE A OPÇÃO DESEJADA: "))
+                            print()
+                            if op_vacinas==1:
+                                funcadm.vacinaadd()
+                            elif op_vacinas==2:
+                                funcadm.proxvacina()
+                            elif op_vacinas==3:
+                                funcadm.vacinaapl()
+                            elif op_vacinas==4:
+                                continue
+                        elif opadm==7:
+                                continue
+                    elif menuadm==2:
+                            print("="*15,"GESTÃO PRODUÇÃO", "="*15)
+                            print("01-ADICIONAR AO ESTOQUE")
+                            print("02-REMOVER DO ESTOQUE")
+                            print("03-ATUALIZAR QUANTIDADE DE ITENS")
+                            print("04-LISTAR ESTOQUE")
+                            print("05-ADICIONAR PRODUÇÃO DIÁRIA")
+                            print("06-LISTAR UM PRODUTO ESPECIFICO")
+                            print("07-VOLTAR")
+                            print()
+                            opadm=int(input("DIGITE A OPÇÃO DESEJADA:"))
                             print()
                             if opadm==1:
-                                print("ADICIONAR ANIMAL")
-                                id_animal= len(rebanho)+1
-                                tipo=input("TIPO DO ANIMAL:").upper()
-                                peso=int(input("PESO DO ANIMAL(KG):"))
-                                gestaçao=input("O ANIMAL É GESTANTE? (SIM) OU (NÃO)").upper()
-                                valor=int(input("QUAL O VALOR? (R$) "))
-                                quantidade=int(input("QUAL A QUANTIDADE DE ANIMAIS? "))
-                                rebanho.append([id_animal,tipo,peso,gestaçao, valor, quantidade])
-                                print()
-                                print(F"ANIMAL ADICIONADO COM SUCESSO!")
-                                print(f"ID:{id_animal}, TIPO:{tipo}, PESO:{peso},GESTANTE:{gestaçao}, VALOR:{valor}, QUANTIDADE:{quantidade}")
-                                print()
+                                funcadm.addestoque(estoqueadm)
                             elif opadm==2:
-                                print("REMOVER REBANHO")
-                                for i in rebanho:
-                                            print(f'''
-ID={i[0]}
-TIPO={i[1]}
-PESO={i[2]}
-GESTAÇÃO={i[3]}
-VALOR={i[4]}
-QUANTIDADE={i[5]}
-''')
-                                existe=False
-                                print()
-                                remv=int((input("QUAL ANIMAL VOCÊ QUER REMOVER? DIGITE O NÚMERO DE INDENTIFICAÇÃO:")))
-                                print()
-                                for i in rebanho:
-                                       if i[0]==remv:
-                                            rebanho.remove(i)
-                                            existe=True
-                                            print()
-                                            print("ANIMAL REMOVIDO COM SUCESSO!")
-                                            print()
-                                            break
-                                            
-                                if not existe:
-                                     print()
-                                     print("ANIMAL NÃO ENCONTRADO!")
-                                     print()
+                                funcadm.remvestoque(estoqueadm)
                             elif opadm==3:
-                                print("="*30)
-                                print("EDITAR ANIMAL")
-                                for i in rebanho:
-                                            print(f'''
-ID={i[0]}
-TIPO={i[1]}
-PESO={i[2]}
-GESTAÇÃO={i[3]}  
-''')
-                                print()
-                                id_atualizar=int(input("DIGITE QUAL A IDENTIFICAÇÃO DO ANIMAL QUE VOCÊ QUER ATUALIZAR:"))
-                                animal_encontrado=False
-                                print()
-                                for i in rebanho:
-                                     if i[0]==id_atualizar:
-                                          i[2]=int(input("DIGITE O PESO ATUALIZADO DO ANIMAL: "))
-                                          i[3]=(input("DIGITE SE AINDA ESTÁ PRENHA O ANIMAL (SIM) OU (NÃO): "))
-                                          i[4]=int(input("DIGITE O VALOR ATUALIZADO DO ANIMAL: "))
-                                          animal_encontrado=True
-                                          print(f'''
-ATUALIZAÇÃO BEM SUCEDIDA!
-ID:{i[0]}
-PESO:{i[2]}
-GESTANTE:{i[3]}                                            
-''')    
-                                          break
-                                if not animal_encontrado:
-                                       print(f"ANIMAL COM ID {id_atualizar} NÃO ENCONTRADO NO REBANHO.")
+                                funcadm.atualizarproduto(estoqueadm)
                             elif opadm==4:
-                                 print('''
-==================
-RELATÓRIO REBANHO
-==================                                       
-                                       ''')
-                                 
-                                 for i in rebanho:
-                                    print(f'''
-ID={i[0]}
-TIPO={i[1]}
-PESO={i[2]}
-GESTAÇÃO={i[3]} 
-''')
+                                funcadm.listarestoqueadm(estoqueadm)
                             elif opadm==5:
-                                print()
-                                print("="*10,"VACINAS","="*10)
-                                print("01-REGISTRAR VACINA")
-                                print("02-PROXIMAS VACINAS")
-                                print("03-LISTAR VACINAS")
-                                print("04-Voltar")
-                                print()
-                                op_vacinas=int(input("DIGITE A OPÇÃO DESEJADA: "))
-                                print()
-                                if op_vacinas==1:
-                                    print("VACINAS")
-                                    for i in rebanho:
-                                        print(f'''
-ID={i[0]}
-TIPO={i[1]}
-''')
-                                    reg_vacinas=int(input("DIGITE O ID DO ANIMAL PARA REGISTRAR A VACINA:"))
-                                    for i in rebanho:
-                                        if i[0]==reg_vacinas:
-                                            id_animal=i[0]
-                                            vacina_nome=input("DIGITE O NOME DA VACINA:")
-                                            data=input("DIGITE A DATA DA VACINA(AA/MM/YY): ")
-                                            prox_vacina=input("DIGITE A DATA DA PROXIMA VACINA(AA/MM/YY):")
-                                            vacina.append([id_animal, vacina_nome, data, prox_vacina])
-                                    print("VACINA REGISTRADO COM SUCESSO!")
-                                elif op_vacinas==2:
-                                    print("PROXIMAS VACINAS A SEREM APLICADAS")
-                                    print()
-                                    for i in vacina:
-                                        if i[3]:
-                                            print(F"AS PROXÍMAS VACINAS SÃO: {i[3]}")
-                                elif op_vacinas==3:
-                                    print("VACINAS JÁ APLICADAS")
-                                    vacina_aplc=False
-                                    for i in vacina:
-                                         if i[2]:
-                                            vacina_aplc=True
-                                            print(i[0],i[1],i[2],i[3])
-                                    if not vacina_aplc:
-                                         print("NENHUMA VACINA APLICADA")
-                                elif op_vacinas==4:
-                                     continue
-                            elif opadm==6:
-                                 print("LISTAR UM PRODUTO SÓ")
-                                 for i in estoqueadm:
-                                      if i[2]==1:
-                                            print(i[0])
-                                            print(i[1])
-                                            print(i[2])
-                                           
-                                           
-                            elif opadm==7:
-                                 continue
-                        elif menuadm==2:
-                                print("="*15,"GESTÃO PRODUÇÃO", "="*15)
-                                print("01-ADICIONAR AO ESTOQUE")
-                                print("02-REMOVER DO ESTOQUE")
-                                print("03-ATUALIZAR QUANTIDADE DE ITENS")
-                                print("04-LISTAR ESTOQUE")
-                                print("05-ADICIONAR PRODUÇÃO DIÁRIA")
-                                print("06-LISTAR UM PRODUTO ESPECIFICO")
-                                print("07-VOLTAR")
-                                print()
-                                opadm=int(input("DIGITE A OPÇÃO DESEJADA:"))
-                                print()
-                                if opadm==1:
-                                    id_produto=len(estoqueadm)+1
-                                    produto=input("DIGITE O PRODUTO A SER ADICIONADO:  ")
-                                    quantidade=int(input("DIGITE A QUANTIDADE DE ITENS: "))
-                                    peso=int(input("DIGITE O PESO(KG/L): "))
-                                    valor=int(input("DIGITE O VALOR DO PRODUTO(R$): "))
-                                    validade=(input("DIGITE A VALIDADE DO PRODUTO(AA/MM/YY): "))
-                                    estoqueadm.append([id_produto, produto, quantidade,peso,valor,validade])
-                                    print(f'''      
-===============================
-Produto adicionado com sucesso!
-===============================
-ID:{id_produto}
-PRODUTO:{produto}
-QUANTIDADE:{quantidade}
-PESO(KG/L):{peso}
-VALOR(R$):{valor}
-VALIDADE(AA/MM/YY):{validade}
-===============================
-                            ''')
-                                elif opadm==2:
-                                    print("="*15,"REMOÇÃO DE PRODUTO","="*15)
-                                    for i in estoqueadm:
-                                            print(f'''
-ID: {i[0]}
-PRODUTO: {i[1]}
-QUANTIDADE:{i[2]}
-PESO(KG/L): {i[3]}
-VALOR(R$): R$ {i[4]}
-VALIDADE: {i[5]}
-TOTAL DE PRODUTOS: {len(estoqueadm)}     
-''')
-                                    existe=False
-                                    remv_produto=int(input("DIGITE O PRODUTO QUE VOCÊ QUER REMOVER(ID):"))
-                                    for i in estoqueadm:
-                                        if i[0]==remv_produto:
-                                            estoqueadm.remove(i)
-                                            print("PRODUTO REMOVIDO COM SUCESSO!")
-                                            existe=True
-                                    if not existe:
-                                            print("PRODUTO NÃO ENCONTRADO!")
-                                elif opadm==3:
-                                    print("="*15,"ATUALIZAR PRODUTO", "="*15)
-                                    for i in estoqueadm:
-                                            print(f'''
-ID: {i[0]}
-PRODUTO: {i[1]}
-QUANTIDADE:{i[2]}
-PESO(KG/L): {i[3]}
-VALOR(R$): R$ {i[4]}
-VALIDADE: {i[5]}
-TOTAL DE PRODUTOS: {len(estoqueadm)}     
-''')
-                                    update_estoque=int(input("DIGITE QUAL O PRODUTO VOCÊ QUER ATUALIZAR(ID): "))
-                                    for i in estoqueadm:
-                                        if i[0]==update_estoque:
-                                             i[0]=int(input("DIGITE O ID ATUALIZADO: "))
-                                             i[1]=input("DIGITE QUAL O NOVO PRODUTO:")
-                                             i[2]=int(input("DIGITE A QUANTIDADE ATUALIZADA DO PRODUTO: "))
-                                             i[3]=int(input("DIGITE O PESO/VOLUME DO PRODUTO ATUALIZADO(KG/L): "))
-                                             i[4]=int(input("DIGITE O VALOR DO PRODUTO ATUALIZADO(R$): "))
-                                             i[5]=input("DIGITE A VALIDADE ATUALIZADA DO PRODUTO(AA/MM/YY):")
-                                             print(f'''      
-===============================
-PRODUTO ATUALIZADO COM SUCESSO!
-===============================
-''')
-                                elif opadm==4:
-                                    print("="*15,"ESTOQUE","="*15)
-                                    if len(estoqueadm)==0:
-                                        print("NENHUM PRODUTO DISPONÍVEL!")
-                                    else:
-                                        for i in estoqueadm:
-                                            print(f'''
-ID: {i[0]}
-PRODUTO: {i[1]}
-QUANTIDADE:{i[2]}
-PESO(KG/L): {i[3]}
-VALOR(R$): R$ {i[4]}
-VALIDADE: {i[5]}
-TOTAL DE PRODUTOS: {len(estoqueadm)}     
-''')
-                                elif opadm==5:
-                                    print("="*10,"PRODUÇÃO DIÁRIA",)
-                                    encontrado=False
-                                    for i in estoqueadm:
-                                            print(f'''
-ID: {i[0]}
-PRODUTO: {i[1]}
-QUANTIDADE:{i[2]}
-PESO(KG/L): {i[3]}
-VALOR(R$): R$ {i[4]}
-VALIDADE: {i[5]}
-TOTAL DE PRODUTOS: {len(estoqueadm)}     
-                                            ''')
-                                    prod_diaria=int(input("DIGITE O ID DO PRODUTO PRODUZIDO:"))
-                                    for i in estoqueadm:
-                                        if i[0]==prod_diaria:
-                                            quant_diaria=int(input("QUAL FOI A PRODUÇÃO DIARIA?"))
-                                            i[2]+=quant_diaria
-                                            print("PRODUÇÃO DIARIA CADASTRADA COM SUCESSO")
-                                            encontrado=True
-                                    if not encontrado:
-                                            print("PRODUTO NÃO ENCONTRADO!")
-                                for i in estoqueadm:
-                                    if i[2]<5:
-                                        print(f"ALERTA!!!!!! O {i[1]} ESTÁ COM ESTOQUE BAIXO!")
-                        elif menuadm==3:
-                                print("MENU FINANCEIRO")
-                                print("01-REGISTRAR ENTRADA")
-                                print("02-REGISTRAR SAIDA")
-                                print("03-VER SALDO")
-                                print("04-FILTRAR POR TIPO(ENTRADA/SAIDA)")
-                                print("05-VER TOTAL DE ENTRADAS")
-                                print("06-VER TOTAL DE SAIDAS")
-                                print("07-VOLTAR")
-                                op_fin=int(input("DIGITE A OPÇÃO DESEJADA: "))
-
-                                if op_fin==1:
-                                    print("REGISTRAR ENTRADA")
-                                    valor=int(input("VALOR(R$): "))
-                                    desc=input("DESCRIÇÃO: ")
-                                    financeiro.append([valor,desc, "ENTRADA"])
-                                    print(F"ENTRADA ADICIONADA COM SUCESSO")
-                                elif op_fin==2:
-                                    print("REGISTRAR SAIDA")
-                                    valor=int(input("VALOR(R$):"))
-                                    desc=input("DESCRIÇÃO:")
-                                    tipo="SAIDA"
-                                    financeiro.append([valor,desc,"SAIDA"])
-                                    print("SAIDA ADICIONADA COM SUCESSO")
-                                elif op_fin==3:
-                                    print("SALDO")
-                                    saldo=0
-                                    for item in financeiro:
-                                        if item[2]=="ENTRADA":
-                                            saldo += int(item[0])
-                                        elif item[2]=="SAIDA":
-                                            saldo -= int(item[0])
-                                    print(F"O SALDO ATUAL É {saldo} R$")
-                                if op_fin==4:
-                                    print("FILTRO POR TIPO(ENTRADA/SAIDA)")
-                                    tipo=input("DIGITE QUAL O FILTRO(ENTRADA/SAIDA): ").upper()
-                                    existe=False
-                                    for i in financeiro:
-                                        if i[2]==tipo:
-                                            print(f"VALOR: R${i[0]} | DESCRIÇÃO: {i[1]} | TIPO: {i[2]}")
-                                            existe=True
-                                    if not existe:
-                                        print(f"NENHUM REGISTRO DO TIPO {tipo} ENCONTRADO!")
-                                if op_fin==5:
-                                    total=0
-                                    for i in financeiro:
-                                        if i[2]=="ENTRADA":
-                                            total+=int(i[0])
-                                    print("TOTAL DE ENTRADAS:", total)
-                                if op_fin==6:
-                                    total=0
-                                    for i in financeiro:
-                                        if i[2]=="SAIDA":
-                                            total+=int(i[0])
-                                    print("TOTAL DE SAIDAS:", total)
-                                if op_fin==7:
-                                    continue
-                        elif menuadm==4:
-                            print('''
+                                funcadm.prodiaria(estoqueadm)
+                    elif menuadm==3:
+                            print("MENU FINANCEIRO")
+                            print("01-REGISTRAR ENTRADA")
+                            print("02-REGISTRAR SAIDA")
+                            print("03-VER SALDO")
+                            print("04-VER TOTAL DE ENTRADAS")
+                            print("05-VER TOTAL DE SAIDAS")
+                            print("06-VOLTAR")
+                            op_fin=int(input("DIGITE A OPÇÃO DESEJADA: "))
+                            if op_fin==1:
+                                funcadm.regentrada(financeiro)
+                            elif op_fin==2:
+                                funcadm.regsaida(financeiro)
+                            elif op_fin==3:
+                                funcadm.saldo(financeiro)
+                            elif op_fin==4:
+                                funcadm.total_entrada(financeiro)
+                            elif op_fin==5:
+                                funcadm.total_saida(financeiro)
+                            elif op_fin==6:
+                                continue
+                    elif menuadm==4:
+                        print('''
 =================
-    RETIRADAS
+RETIRADAS
 =================
 01-AGENDAR RETIRADA
 02-CONFIRMAR RETIRADA
 03-RETIRADAS PENDENTES
 04-RETIRADAS FEITAS
 05-VOLTAR
-                ''')
-                            op_retirada=int(input("DIGITE A OPÇÃO DESEJADA: "))
-                            if op_retirada==1:
-                                data=input("DIGITE A DATA DA RETIRADA(AA/MM/YY): ")
-                                tipo_retirada=input("DIGITE O TIPO DA RETIRADA(ANIMAL/PRODUTO): ")
-                                hora=input("DIGITE A HORA DA RETIRADA(HH:MM:SS):")
-                                id_retirada=int(input("DIGITE O ID DO PRODUTO/ANIMAL À SER EFETUADO A RETIRADA:"))
-                                status="PENDENTE"
-                                retiradas.append([data,tipo_retirada,hora, id_retirada,status])
-                                print(F"RETIRADA AGENDADA COM SUCESSO PARA {data}, às {hora}")
-                            elif op_retirada==2:
-                                if len(retiradas)==0:
-                                    print("NENHUMA RETIRADA AGENDADA")
-                                elif len(retiradas)>=1:
-                                    for i in retiradas:
-                                        if i[4]=="PENDENTE":
-                                            print(f"ID:{i[3]}| TIPO:{i[1]}|HORA:{i[2]}|DATA:{i[0]}")
-                                id_confretirada=int(input("DIGITE O ID DA RETIRADA A SER CONFIRMADA:"))
-                                existe=False
-                                for i in retiradas:
-                                    if i[3]==id_confretirada:
-                                        i[4]="CONCLUIDA"
-                                        existe=True
-                                        print("RETIRADA FEITA COM SUCESSO!")
-                                        continue
-                                    if not existe:
-                                        print("RETIRADA NÃO ENCONTRADA!")
-                                        continue
-                            elif op_retirada==3:
-                                pendente=[]
-                                for i in retiradas:
-                                    if i[4]=="PENDENTE":
-                                        pendente.append(i)
-                                print(f"AS RETIRADAS PENDENTE SÃO {pendente}")
-                            elif op_retirada==4:
-                                concluidas=[]
-                                for i in retiradas:
-                                    if i[4]=="CONCLUIDA":
-                                        concluidas.append(i)
-                                print(f"AS RETIRADAS CONCLUIDAS SÃO {concluidas}")
+            ''')
+                        op_retirada=int(input("DIGITE A OPÇÃO DESEJADA: "))
+                        if op_retirada==1:
+                            funcadm.retirada_agendar(retiradas)
+                        elif op_retirada==2:
+                            funcadm.confirm_retirada(retiradas)
+                        elif op_retirada==3:
+                            funcadm.pendente(retiradas)
+                        elif op_retirada==4:
+                            funcadm.concluida(retiradas)
+                        elif op_retirada==5:
+                            continue
 
-                            elif op_retirada==5:
-                                continue
+                    elif menuadm==5:
+                        print("-"*30)
+                        print("RELATORIOS")
+                        print("-"*30)
+                        print("01-RELATÓRIO REBANHO")
+                        print("02-RELATÓRIO DO ESTOQUE")
+                        print("03-RELATÓRIO FINANCEIRO")
+                        print("04-RELÁTORIO RETIRADAS")
+                        print("05-RELATÓRIOS VACINAS")
+                        print("06-VOLTAR")
+                        print("-"*30)
+                        op_relatorio=int(input("DIGITE A OPÇÃO DESEJADA:"))
+                        if op_relatorio==1:
+                           funcadm.listarrebanho
+                        elif op_relatorio==2:
+                            funcadm.listarestoqueadm
+                        elif op_relatorio==3:
+                            print("RELATÓRIO FINANCEIRO")
+                            print("-"*30)
+                            print("-"*30)
+                            total_saida=0
+                            total_entrada=0
+                            for i in financeiro:
+                                if i["tipo"] == "ENTRADA":
+                                    total_entrada += int(i[0])
+                                elif i["tipo"] == "SAIDA":
+                                    total_saida += int(i[0])
+                            saldo=(total_entrada-total_saida)
+                            print(F"TOTAL DE ENTRADAS: {total_entrada}")
+                            print(f"TOTAL DE SAIDAS: {total_saida}")
+                            print(F"O SALDO ATUAL É: {saldo}")
+                        elif op_relatorio==4:
+                            funcadm.listar_retirada(retiradas)
+                        elif op_relatorio==5:
+                            print("-"*30)
+                            print("RELATÓRIO VACINA")
+                            print("-"*30)
+                            print(f"O TOTAL DE VACINAS APLICADAS É:{len(vacina)}")
+                            for i in vacina:
+                                print(i)
+                        elif op_relatorio==6:
+                            continue
+                    if menuadm==6:
+                        print("-"*30)
+                        print("GESTÃO DE PROPOSTAS")
+                        print("-"*30)
+                        print("01-VER PROPOSTAS RECEBIDAS")
+                        print("02-RESPONDER PROPOSTA")
+                        print("03-VOLTAR")
+                        op_proposta=int(input("DIGITE A OPÇÃO DESEJADA: "))
+                        if op_proposta==1:
+                            funcadm.ver_propostas(propostas)
+                        elif op_proposta==2:
+                            funcadm.confirm_proposta(propostas)
+                        elif op_proposta==3:
+                            continue
 
-                        elif menuadm==5:
-                            print("-"*30)
-                            print("RELATORIOS")
-                            print("-"*30)
-                            print("01-RELATÓRIO REBANHO")
-                            print("02-RELATÓRIO DO ESTOQUE")
-                            print("03-RELATÓRIO FINANCEIRO")
-                            print("04-RELÁTORIO RETIRADAS")
-                            print("05-RELATÓRIOS VACINAS")
-                            print("06-VOLTAR")
-                            print("-"*30)
-                            op_relatorio=int(input("DIGITE A OPÇÃO DESEJADA:"))
-                            if op_relatorio==1:
-                                print("-"*30)
-                                print("RELATÓRIO REBANHO")
-                                print("-"*30)
-                                print(f"O TOTAL DE ANIMAIS É:{len(rebanho)}")
-                                for i in rebanho:
-                                    print(i)
-                            elif op_relatorio==2:
-                                print("-"*30)
-                                print("RELATÓRIO ESTOQUE")
-                                print("-"*30)
-                                print(f"O TOTAL DE PRODUTOS É:{len(estoqueadm)}")
-                                for i in estoqueadm:
-                                    print(i)
-                            elif op_relatorio==3:
-                                print("-"*30)
-                                print("RELATÓRIO FINANCEIRO")
-                                print("-"*30)
-                                total_saida=0
-                                total_entrada=0
-                                for i in financeiro:
-                                    if i[2] == "ENTRADA":
-                                        total_entrada += int(i[0])
-                                    elif i[2] == "SAIDA":
-                                        total_saida += int(i[0])
-                                saldo=(total_entrada-total_saida)
-                                print(F"TOTAL DE ENTRADAS: {total_entrada}")
-                                print(f"TOTAL DE SAIDAS: {total_saida}")
-                                print(F"O SALDO ATUAL É: {saldo}")
-                            elif op_relatorio==4:
-                                print("-"*30)
-                                print("RELATÓRIO DE RETIRADA")
-                                print("-"*30)
+                            
+                
 
-                                pendente=[]
-                                for i in retiradas:
-                                    if i[4]=="PENDENTE":
-                                        pendente.append(i)
-                                print(f"AS RETIRADAS PENDENTE SÃO {pendente}")
-                                concluidas=[]
-                                for i in retiradas:
-                                    if i[4]=="CONCLUIDA":
-                                        concluidas.append(i)
-                                        print("-"*30)
-                                        print(f"AS RETIRADAS CONCLUIDAS SÃO {concluidas}")
-                                        print("-"*30)
-                                print(F"RETIRADAS CONCLUIDAS: {len(concluidas)}")
-                                print(F"RETIRADAS PENDENTES: {len(pendente)}")
-                            elif op_relatorio==5:
-                                print("-"*30)
-                                print("RELATÓRIO VACINA")
-                                print("-"*30)
-                                print(f"O TOTAL DE VACINAS APLICADAS É:{len(vacina)}")
-                                for i in vacina:
-                                    print(i)
-                            elif op_relatorio==6:
-                                continue
-                        if menuadm==6:
-                            print("-"*30)
-                            print("GESTÃO DE PROPOSTAS")
-                            print("-"*30)
-                            print("01-VER PROPOSTAS RECEBIDAS")
-                            print("02-RESPONDER PROPOSTA")
-                            print("03-VOLTAR")
-                            op_proposta=int(input("DIGITE A OPÇÃO DESEJADA: "))
-                            if op_proposta==1:
-                                if len(propostas)==0:
-                                    print("NENHUMA PROPOSTA RECEBIDA!")
-                                elif len(propostas)>=1:
-                                    for i in propostas:
-                                        print(f"ID:{i[0]} | USUÁRIO:{i[1]} | PRODUTO:{i[2]} | VALOR:R${i[3]} | DESCRIÇÃO:{i[4]} | QUANTIDADE:{i[5]} | STATUS:{i[6]}")
-                            elif op_proposta==2:
-                                id_proposta=int(input("DIGITE O ID DA PROPOSTA QUE DESEJA RESPONDER: "))
-                                proposta_encontrada=False
-                                for i in propostas:
-                                    if i[0]==id_proposta:
-                                        print(f"PROPOSTA ENCONTRADA! USUÁRIO:{i[1]}| TIPO:{i[2]}| DESCRIÇÃO:{i[3]}| VALOR PROPOSTO: R${i[4]}| STATUS:{i[5]}")
-                                        resposta=input("DIGITE SUA RESPOSTA (ACEITAR/REJEITAR): ").upper()
-                                        if resposta=="ACEITAR":
-                                            i[6]="ACEITA"
-                                            print("PROPOSTA ACEITA COM SUCESSO!")
-                                        elif resposta=="REJEITAR":
-                                            i[6]="REJEITADA"
-                                            print("PROPOSTA REJEITADA COM SUCESSO!")
-                                        proposta_encontrada=True
-                                        break
-                                if not proposta_encontrada:
-                                    print("PROPOSTA NÃO ENCONTRADA!")
-                            elif op_proposta==3:
-                                continue
-                            elif op_proposta==4:
-                                continue
-                             
-                    
-
-        elif cadastro_login.login(cliente):
-            # op_user=0
+        elif perm_login==2:
+            logadocliente = login.login_cliente(cliente)
+            op_user=0
             while op_user>=0:
                     print(f'''
-SEJA BEM VINDO {usuario}
+print(f"SEJA BEM VINDO!")
 
 ===============================
         MENU
@@ -601,106 +268,7 @@ SEJA BEM VINDO {usuario}
                                ''')   
                         op_compracliente=int(input("DIGITE A OPÇÃO DESEJADA: "))              
                         if op_compracliente==1:
-                            produtos_comprados=[]
-                            total_geral=0
-                            continuar="SIM"
-                            while continuar=="SIM":
-                                    print('''
-=========================
-ESTOQUE DISPONÍVEL   
-=========================
-    ''')
-                                    if len(estoqueadm)==0:
-                                        print("NENHUM PRODUTO DISPONÍVEL")
-                                        continuar="NÃO"
-                                    elif len(estoqueadm)>=1:
-                                        for i in estoqueadm:
-                                                    print(f'''
-ID: {i[0]}
-PRODUTO: {i[1]}
-QUANTIDADE:{i[2]}
-PESO(KG): {i[3]}
-VALOR(R$): R$ {i[4]}
-VALIDADE: {i[5]}
-    
-                                                    ''')
-                                    id_compra= int(input("DIGITE O ID DO PRODUTO QUE DESEJA ADQUIRIR: "))
-                                    produto_encontrado= False
-                                    for i in estoqueadm:
-                                        if i[0]==id_compra:
-                                            produto_encontrado=True
-                                            quant_compra=int(input("DIGITE A QUANTIDADE QUE DESEJA COMPRAR: "))
-                                            valor_unitario=i[4]
-                                            if quant_compra<=0:
-                                                print("QUANTIDADE INVALIDA!")
-                                            elif quant_compra>i[2]:
-                                                print("QUANTIDADE INVALIDA!")
-                                            elif quant_compra<=i[2]:
-                                                for p in propostas:
-                                                    if p[1]==usuario and p[2]==i[1] and p[6]=="ACEITA":
-                                                        print(f"PROPOSTA ACEITA ENCONTRADA! O VALOR DO PRODUTO {i[1]} FOI ALTERADO PARA R${p[3]}")
-                                                        valor_unitario=p[3]
-                                                        break
-                                                total_compra=quant_compra*valor_unitario
-                                                produtos_comprados.append([i[0], i[1], quant_compra, total_compra, "PRODUTO"])
-                                                total_geral=total_geral+total_compra
-                                            print("PRODUTO ADICIONADO A COMPRA!")
-                                            continuar=input("DESEJA ADICIONAR OUTRO PRODUTO?(SIM/NÃO): ").upper()
-                                            if continuar=="SIM":
-                                                continue
-                                            if len(produtos_comprados)>0:
-                                                print('''
-=========================
-    RESUMO DA COMPRA
-=========================
-''')
-                                                for produto in produtos_comprados:
-                                                    print(f'''
-
-PRODUTO: {produto[1]}
-QUANTIDADE: {produto[2]}
-TOTAL: R$ {produto[3]:.2f}
-''')
-                                                print(f"TOTAL GERAL: R$ {total_geral:.2f}")
-
-                                            confirmar=input("DESEJA CONFIRMAR A COMPRA? SIM/NAO: ").upper()
-                                            if confirmar=="NÃO" or confirmar=="NAO":
-                                                print("COMPRA CANCELADA!")
-                                            elif confirmar=="SIM":
-                                                for produto in produtos_comprados:
-                                                    for item in estoqueadm:
-                                                        if item[0] == produto[0]:
-                                                            item[2] -= produto[2]
-                                                id_compra_cliente=len(estoquecliente)+1
-                                                estoquecliente.append([id_compra_cliente, "PRODUTOS", produtos_comprados, total_geral, "PENDENTE", "PRODUTO"])
-                                                financeiro.append([total_geral, "PRODUTO VENDIDO", "ENTRADA"])
-                                            print(F'''
-
-=============================
-COMPRA REALIZADA COM SUCESSO!
-=============================
-''')
-
-                                            for produto in produtos_comprados:
-                                                print(f'''
-
-PRODUTO: {produto[1]}
-QUANTIDADE COMPRADA: {produto[2]}
-VALOR TOTAL: R$ {produto[3]:.2f}
-STATUS DE RETIRADA: PENDENTE
-''')
-
-                                                print(f'''
-=============================
-TOTAL GERAL: R$ {total_geral:.2f}
-=============================
-''')
-                                    if not produto_encontrado:
-                                                print("OPÇÃO INVALIDA! COMPRA CANCELADA")
-                        
-                        
-                        
-                        
+                    
                         elif op_compracliente==2:
                             animais_comprados=[]
                             total_geral=0
@@ -735,7 +303,7 @@ VALOR(R$): R$ {i[4]}
                                                 print("QUANTIDADE INVALIDA!")
                                             elif quant_compra<=i[5]:
                                                 for p in propostas:
-                                                    if p[1]==usuario and p[2]==i[1] and p[6]=="ACEITA":
+                                                    #if p[1]==usuario and p[2]==i[1] and p[6]=="ACEITA":
                                                         print(f"PROPOSTA ACEITA ENCONTRADA! O VALOR DO ANIMAL {i[1]} FOI ALTERADO PARA R${p[4]}")
                                                         valor_unitario=p[3]
                                                         break
@@ -871,7 +439,7 @@ QUANTIDADE: {i[2]}
                                         print("QUANTIDADE INVALIDA!")
                                         continue
                                     id_proposta = len(propostas)+1
-                                    propostas.append([id_proposta, usuario, i[1], valor_proposta, desc_proposta, qtd_proposta, "PENDENTE"])
+                                    #propostas.append([id_proposta, usuario, i[1], valor_proposta, desc_proposta, qtd_proposta, "PENDENTE"])
                                     print("PROPOSTA ENVIADA!")
                                     print("AGUARDANDO RESPOSTA DO ADMINISTRADOR...")
                             if not produto_encontrado:
@@ -879,7 +447,7 @@ QUANTIDADE: {i[2]}
                             if op_proposta==2:
                                 propostas_usuario=False
                                 for i in propostas:
-                                    if i[1]==usuario:
+                                    #if i[1]==usuario:
                                         propostas_usuario=True
                                         print(f'''
 ID: {i[0]}
@@ -889,50 +457,50 @@ DESCRIÇÃO: {i[4]}
 QUANTIDADE: {i[5]}
 STATUS: {i[6]}
 ''')                  
-                                                                                
+                                                                            
 
 
-                                
+                            
+                                    
+                                    
+
+
                                         
+                                            
+
+
+
                                         
-
-
-                                            
-                                                
- 
-
-
-                                            
         else:
             print("USUÁRIO OU SENHA INVALIDO! ")
             continue
-                                                
+                                            
+
+                                    
+
 
                                         
 
 
-                                            
+                                        
+                                                                        
+                                
+                                
+                                        
 
+                                
+                                
 
-                                            
-                                                                            
-                                    
-                                    
-                                            
-
-                                    
-                                    
-
-                                    
+                                
 
 
 
-    
 
+
+                
                     
-                        
-                    
+                
 
-            
-                    
+        
+                
 
