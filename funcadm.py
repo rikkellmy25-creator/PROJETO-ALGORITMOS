@@ -1,4 +1,7 @@
 import login
+import bibliotecas
+from datetime import datetime
+import questionary
 
 
 # ============================================================
@@ -12,23 +15,6 @@ import login
 # ============================================================
 
 
-def selecadm(usuario):
-    print(f"""
-SEJA BEM VINDO!
-{usuario}!
-===============================
-        MENU ADM
-01-GERENCIAR REBANHO
-02-GERENCIAR PRODUÇÃO/ESTOQUE 
-03-FINANCEIRO
-04-RETIRADAS
-05-RELATÓRIOS
-06-GESTÃO DE PROPOSTAS
-07-SAIR
-===============================\n
-""")
-    return
-
 
 def adicionaranimal(rebanho):
     print("ADICIONAR ANIMAL")
@@ -39,6 +25,7 @@ def adicionaranimal(rebanho):
     valor=int(input("QUAL O VALOR? (R$) "))
     quantidade=int(input("QUAL A QUANTIDADE DE ANIMAIS? "))
     rebanho.append({"ID": id_animal, "TIPO": tipo, "PESO": peso, "GESTACAO": gestacao, "VALOR": valor, "QUANTIDADE": quantidade})
+    
     print()
     print(f'''
 ANIMAL ADICIONADO COM SUCESSO!
@@ -121,8 +108,9 @@ def vacinaadd(rebanho,vacina):
             break
     if not encontrado:
         print("ANIMAL NÃO ENCONTRADO!")
-
-
+def listarvacina(vacina):
+    for i in vacina:
+        print(f'ID: {i["ID"]} | VACINA: {i["VACINA"]} | PROXIMA: {i["PROXIMA"]}')
 def proxvacina(vacina):
     print("PROXIMAS VACINAS A SEREM APLICADAS")
     print()
@@ -130,7 +118,8 @@ def proxvacina(vacina):
         print("NENHUMA VACINA REGISTRADA")
         return
     for i in vacina:
-        print(f'ID: {i["ID"]} | VACINA: {i["VACINA"]} | PROXIMA: {i["PROXIMA"]}')
+        msg=(f'ID: {i["ID"]} | VACINA: {i["VACINA"]} | PROXIMA: {i["PROXIMA"]}')
+        print(msg)
 
 
 def vacinaapl(vacina):
@@ -358,3 +347,7 @@ def confirm_proposta(propostas):
             break
     if not proposta_encontrada:
         print("PROPOSTA NÃO ENCONTRADA!")
+    
+
+def registrar_historico(historico,acao, item, qtd):
+    historico.append({"data": datetime.now().strftime("%d/%m %H:%M"),"acao": acao,"item": item,"qtd": qtd})

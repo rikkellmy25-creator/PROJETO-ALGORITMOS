@@ -2,7 +2,8 @@ import cadastro
 import login
 import funcadm
 import funcusuario
-#import questionary
+import bibliotecas
+import questionary
 print("-"*50)
 print("Sistema de Gestão Agropecuária (Fazenda Sertão)".upper())
 
@@ -20,143 +21,147 @@ retiradas=[]
 carac_especiais= "!@#$%&*()-_=+[]{}|;:,.<>?/"
 propostas=[]
 compras_cliente=[]
+historico=[]
 
 
 while iniciar!=0:
-    print('''
-====================
-      MENU
-====================      
-01-CADASTRAR       
-02-LOGIN           
-====================               
-''')
-    menu=int(input("Digite a opção desejada: "))
-    print()
-            
-    if menu==1:
-        print(f'''
-====================
-        MENU
-==================== 
-01-ADM
-02-CLIENTE
-03-VOLTAR
-====================
-''')
-        print()
-        cadastrar=int(input("Digite a opção desejada: "))
-        print()
-        if cadastrar==1:
+    menu=questionary.select("MENU", choices=[
+        "CADASTRO",
+        "LOGIN",
+        "SAIR",
+    ]).ask()
+    if menu=="SAIR":
+        break
+    if menu=="CADASTRO":
+        cadastrar=questionary.select("CADASTRO",choices=[
+            "ADM",
+            "CLIENTE",
+            "VOLTAR"
+        ]).ask()
+        if cadastrar=="ADM":
             cadastro.cadastro_adm(adm)
-        elif cadastrar==2:
+        elif cadastrar=="CLIENTE":
             cadastro.cadastro_cliente(cliente)
-        elif cadastrar==3:
+        elif cadastrar=="VOLTAR":
             continue
-    if menu==2:
-        print(f'''
-====================
-        MENU
-==================== 
-01-ADM
-02-CLIENTE
-03-VOLTAR
-====================
-''')
-        perm_login=int(input("DIGITE A OPÇÃO DESEJADA: "))
-        if perm_login==3:
+    if menu=="LOGIN":
+        perm_login=questionary.select("MENU LOGIN", choices=[
+            "ADM",
+            "CLIENTE",
+            "VOLTAR"
+        ]).ask()
+        if perm_login=="VOLTAR":
             continue
-        elif perm_login==1:
+        elif perm_login=="ADM":
             logadoadm,usuario=login.login_adm(adm)
             if logadoadm==True: 
                 while True:
-                    funcadm.selecadm(usuario)
-                    menuadm=int(input("DIGITE A OPÇÃO DESEJADA: "))
-                    print()
-                    #if menuadm==7:
-                    if menuadm==1:
-                        print("="*30)
-                        print("01-ADICIONAR ANIMAL")
-                        print("02-REMOVER ANIMAL")
-                        print("03-EDITAR ANIMAL")
-                        print("04-LISTAR ANIMAIS DO REBANHO")
-                        print("05-VACINAS")
-                        print("06-VOLTAR")
+                    menuadm = questionary.select(
+                    "MENU ADM",
+                    choices=[
+                    "Gerenciar Rebanho",
+                    "Produção/Estoque",
+                    "Financeiro",
+                    "Retiradas",
+                    "Relatórios",
+                    "Propostas",
+                    "Sair"]).ask()
+                    if menuadm=="Sair":
+                        break
+                    if menuadm=="Gerenciar Rebanho":
+                        opadm=questionary.select(
+                        "GERENCIAR REBANHO",
+                        choices=[
+                        "ADICIONAR ANIMAL",
+                        "REMOVER ANIMAL",
+                        "EDITAR ANIMAL",
+                        "LISTAR ANIMAIS DO REBANHO",
+                        "VACINAS",
+                        "RELATÓRIO EM PDF REBANHO",
+                        "VOLTAR"]).ask()
                         print()
-                        opadm=int(input("DIGITE A OPÇÃO DESEJADA: "))
-                        print()
-                        if opadm==1:
+                        if opadm=="ADICIONAR ANIMAL":
                             funcadm.adicionaranimal(rebanho)
-                        elif opadm==2:
+                        elif opadm=="REMOVER ANIMAL":
                             funcadm.removeranimal(rebanho)
-                        elif opadm==3:
+                        elif opadm=="EDITAR ANIMAL":
                             funcadm.atualizaranimal(rebanho)
-                        elif opadm==4:
+                        elif opadm=="LISTAR ANIMAIS DO REBANHO":
                             funcadm.listarrebanho(rebanho)
-                        elif opadm==5:
-                            print()
-                            print("="*10,"VACINAS","="*10)
-                            print("01-REGISTRAR VACINA")
-                            print("02-PROXIMAS VACINAS")
-                            print("03-LISTAR VACINAS")
-                            print("04-Voltar")
-                            print()
-                            op_vacinas=int(input("DIGITE A OPÇÃO DESEJADA: "))
-                            print()
-                            if op_vacinas==1:
-                                funcadm.vacinaadd()
-                            elif op_vacinas==2:
-                                funcadm.proxvacina()
-                            elif op_vacinas==3:
-                                funcadm.vacinaapl()
-                            elif op_vacinas==4:
+                        elif opadm=="RELATÓRIO EM PDF REBANHO":
+                            bibliotecas.pdf_relatorio_rebanho(rebanho)
+                        elif opadm=="VOLTAR":
                                 continue
-                        elif opadm==7:
+                        elif opadm=="VACINAS":
+                            op_vacinas=questionary.select("VACINAS", choices=["REGISTRAR VACINA", "PROXIMAS VACINAS","LISTAR VACINAS","RELATORIO EM PDF VACINA","VOLTAR"]).ask()
+                            if op_vacinas=="REGISTRAR VACINA":
+                                funcadm.vacinaadd(rebanho,vacina)
+                            elif op_vacinas=="PROXIMAS VACINAS":
+                                funcadm.proxvacina(vacina)
+                            elif op_vacinas=="LISTAR VACINAS":
+                                funcadm.listarvacina(vacina)
+                            elif op_vacinas=="RELATÓRIO EM PDF VACINA":
+                                bibliotecas.pdf_relatorio_vacina(vacina)
+                            elif op_vacinas=="VOLTAR":
                                 continue
-                    elif menuadm==2:
-                            print("="*15,"GESTÃO PRODUÇÃO", "="*15)
-                            print("01-ADICIONAR AO ESTOQUE")
-                            print("02-REMOVER DO ESTOQUE")
-                            print("03-ATUALIZAR QUANTIDADE DE ITENS")
-                            print("04-LISTAR ESTOQUE")
-                            print("05-ADICIONAR PRODUÇÃO DIÁRIA")
-                            print("06-LISTAR UM PRODUTO ESPECIFICO")
-                            print("07-VOLTAR")
+                    elif menuadm=="Produção/Estoque":
+                            opestoque=questionary.select("GESTÃO PRODUÇÃO", choices=[
+                                "ADICIONAR AO ESTOQUE",
+                                "REMOVER DO ESTOQUE",
+                                "ATUALIZAR QUANTIDADE DE ITENS",
+                                "ADICIONAR PRODUÇÃO DIÁRIA",
+                                "RELATORIO PDF ESTOQUE",
+                                "LISTAR PRODUTOS",
+                                "GRAFICO ESTOQUE",
+                                "RELATORIO EM PDF DO ESTOQUE",
+                                "VOLTAR"
+                            ]).ask()
+                            bibliotecas.alertaestoquebaixo(estoqueadm, limite=5)
                             print()
-                            opadm=int(input("DIGITE A OPÇÃO DESEJADA:"))
-                            print()
-                            if opadm==1:
+                            if opestoque=="ADICIONAR AO ESTOQUE":
                                 funcadm.addestoque(estoqueadm)
-                            elif opadm==2:
+                            elif opestoque=="REMOVER DO ESTQOUE":
                                 funcadm.remvestoque(estoqueadm)
-                            elif opadm==3:
+                            elif opestoque=="ATUALIZAR QUANTIDADE DE ITENS":
                                 funcadm.atualizarproduto(estoqueadm)
-                            elif opadm==4:
+                            elif opestoque=="LISTAR PRODUTOS":
                                 funcadm.listarestoqueadm(estoqueadm)
-                            elif opadm==5:
+                            elif opestoque=="ADICIONAR PRODUÇÃO DIARIA":
                                 funcadm.prodiaria(estoqueadm)
-                    elif menuadm==3:
-                            print("MENU FINANCEIRO")
-                            print("01-REGISTRAR ENTRADA")
-                            print("02-REGISTRAR SAIDA")
-                            print("03-VER SALDO")
-                            print("04-VER TOTAL DE ENTRADAS")
-                            print("05-VER TOTAL DE SAIDAS")
-                            print("06-VOLTAR")
-                            op_fin=int(input("DIGITE A OPÇÃO DESEJADA: "))
-                            if op_fin==1:
-                                funcadm.regentrada(financeiro)
-                            elif op_fin==2:
-                                funcadm.regsaida(financeiro)
-                            elif op_fin==3:
-                                funcadm.saldo(financeiro)
-                            elif op_fin==4:
-                                funcadm.total_entrada(financeiro)
-                            elif op_fin==5:
-                                funcadm.total_saida(financeiro)
-                            elif op_fin==6:
+                            elif opestoque=="RELATORIO EM PDF DO ESTOQUE":
+                                bibliotecas.pdf_relatorio_estoque(estoqueadm)
+                            elif opestoque=="GRAFICO ESTOQUE":
+                                bibliotecas.grafico_estoque(estoqueadm)
+                            elif opestoque=="VOLTAR":
                                 continue
-                    elif menuadm==4:
+                    elif menuadm== "Financeiro":
+                            op_fin=questionary.select("MENU FINANCEIRO", choices=[
+                                "REGISTRAR ENTRADA",
+                                "REGISTRAR SAIDA",
+                                "VER SALDO",
+                                "VER TOTAL DE ENTRADAS",
+                                "VER TOTAL DE SAIDAS",
+                                "GRAFICO FINANCEIRO",
+                                "RELATORIO FINANCEIRO PDF",
+                                "SAIR"
+                            ]).ask()
+                            if op_fin=="REGISTRAR ENTRADA":
+                                funcadm.regentrada(financeiro)
+                            elif op_fin=="REGISTRAR SAIDA":
+                                funcadm.regsaida(financeiro)
+                            elif op_fin=="VER SALDO":
+                                funcadm.saldo(financeiro)
+                            elif op_fin=="VER TOTAL DE ENTRADAS":
+                                funcadm.total_entrada(financeiro)
+                            elif op_fin=="VER TOTAL DE SAIDAS":
+                                funcadm.total_saida(financeiro)
+                            elif op_fin=="GRAFICO FINANCEIRO":
+                                bibliotecas.grafico_financeiro(financeiro)
+                            elif op_fin=="RELATORIO FINANCEIRO PDF":
+                                bibliotecas.pdf_relatorio_financeiro
+                            elif op_fin=="SAIR":
+                                continue
+                    elif menuadm=="Retiradas":
                         print('''
 =================
 RETIRADAS
@@ -167,19 +172,25 @@ RETIRADAS
 04-RETIRADAS FEITAS
 05-VOLTAR
             ''')
-                        op_retirada=int(input("DIGITE A OPÇÃO DESEJADA: "))
-                        if op_retirada==1:
+                        op_retirada=questionary.select("RETIRADAS", choices=[
+                            "AGENDAR RETIRADA",
+                            "CONFIRMAR RETIRADA",
+                            "RETIRADAS PENDENTES",
+                            "RETIRADAS FEITAS",
+                            "SAIR"
+                        ]).ask()
+                        if op_retirada=="AGENDAR RETIRADA":
                             funcadm.retirada_agendar(retiradas)
-                        elif op_retirada==2:
+                        elif op_retirada=="CONFIRMAR RETIRADA":
                             funcadm.confirm_retirada(retiradas)
-                        elif op_retirada==3:
+                        elif op_retirada=="RETIRADAS PENDENTES":
                             funcadm.pendente(retiradas)
-                        elif op_retirada==4:
+                        elif op_retirada=="RETIRADAS FEITAS":
                             funcadm.concluida(retiradas)
-                        elif op_retirada==5:
+                        elif op_retirada=="SAIR":
                             continue
 
-                    elif menuadm==5:
+                    elif menuadm=="Relatórios":
                         print("-"*30)
                         print("RELATORIOS")
                         print("-"*30)
@@ -192,42 +203,23 @@ RETIRADAS
                         print("-"*30)
                         op_relatorio=int(input("DIGITE A OPÇÃO DESEJADA:"))
                         if op_relatorio==1:
-                           funcadm.listarrebanho
+                           funcadm.listarrebanho(rebanho)
                         elif op_relatorio==2:
-                            funcadm.listarestoqueadm
+                            funcadm.listarestoqueadm(estoqueadm)
                         elif op_relatorio==3:
-                            print("RELATÓRIO FINANCEIRO")
-                            print("-"*30)
-                            print("-"*30)
-                            total_saida=0
-                            total_entrada=0
-                            for i in financeiro:
-                                if i["tipo"] == "ENTRADA":
-                                    total_entrada += int(i[0])
-                                elif i["tipo"] == "SAIDA":
-                                    total_saida += int(i[0])
-                            saldo=(total_entrada-total_saida)
-                            print(F"TOTAL DE ENTRADAS: {total_entrada}")
-                            print(f"TOTAL DE SAIDAS: {total_saida}")
-                            print(F"O SALDO ATUAL É: {saldo}")
+                            bibliotecas.pdf_relatorio_financeiro(financeiro)
                         elif op_relatorio==4:
                             funcadm.listar_retirada(retiradas)
                         elif op_relatorio==5:
-                            print("-"*30)
-                            print("RELATÓRIO VACINA")
-                            print("-"*30)
-                            print(f"O TOTAL DE VACINAS APLICADAS É:{len(vacina)}")
-                            for i in vacina:
-                                print(i)
-                        elif op_relatorio==6:
-                            continue
-                    elif menuadm==6:
+                            bibliotecas.pdf_relatorio_vacina(vacina)
+                    elif menuadm=="Propostas":
                         print("-"*30)
                         print("GESTÃO DE PROPOSTAS")
                         print("-"*30)
                         print("01-VER PROPOSTAS RECEBIDAS")
                         print("02-RESPONDER PROPOSTA")
                         print("03-VOLTAR")
+                        
                         op_proposta=int(input("DIGITE A OPÇÃO DESEJADA: "))
                         if op_proposta==1:
                             funcadm.ver_propostas(propostas)
@@ -241,7 +233,7 @@ RETIRADAS
                             
                 
 
-        elif perm_login==2:
+        elif perm_login=="CLIENTE":
             logadocliente = login.login_cliente(cliente)
             op_user=0
             while op_user>=0:
@@ -273,7 +265,7 @@ SEJA BEM VINDO {usuario}!
                         if op_compracliente==1:
                             funcusuario.comprar_produtos(estoqueadm, estoquecliente, financeiro, propostas, cliente)
                         elif op_compracliente==2:
-                            funcusuario.comprar_produtos(rebanho, estoquecliente, financeiro, propostas, cliente)
+                            funcusuario.comprar_animais(rebanho, estoquecliente, financeiro, propostas, cliente)
                     elif menu_user==2:
                         funcusuario.agendar_retirada(estoquecliente, retiradas)
                     if menu_user==3:
