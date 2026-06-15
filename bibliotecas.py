@@ -9,6 +9,7 @@ from reportlab.lib import colors
 from reportlab.lib.units import cm
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+import re
 
 
 def falar(texto):
@@ -195,6 +196,27 @@ def pdf_relatorio_retiradas(retiradas, caminho="rebanho.pdf"):
         ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#f0f0f0")]),
     ]))
     elementos.append(tabela)
+    doc.build(elementos)
+    print(f"PDF gerado em: {caminho}")
+    return caminho
+
+
+
+
+def assistenteia_pdf(texto, titulo="RELATORIO ASSISTENTE", caminho="RELATORIO_ASSISTENTE.pdf"):
+    doc = SimpleDocTemplate(caminho, pagesize=A4)
+    estilos = getSampleStyleSheet()
+    elementos = [Paragraph(titulo, estilos["Title"]), Spacer(1, 0.5 * cm)]
+
+    for linha in texto.split("\n"):
+        linha = linha.strip()
+        if not linha:
+            elementos.append(Spacer(1, 0.2 * cm))
+            continue
+        linha = linha.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        linha = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", linha)
+        elementos.append(Paragraph(linha, estilos["Normal"]))
+
     doc.build(elementos)
     print(f"PDF gerado em: {caminho}")
     return caminho

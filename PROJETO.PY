@@ -20,7 +20,6 @@ financeiro=[]
 vacina=[]
 retiradas=[]
 carac_especiais= "!@#$%&*()-_=+[]{}|;:,.<>?/"
-
 propostas=[]
 compras_cliente=[]
 historico=[]
