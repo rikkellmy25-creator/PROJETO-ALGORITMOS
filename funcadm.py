@@ -215,9 +215,6 @@ def prodiaria(estoqueadm):
             break
     if not encontrado:
         print("PRODUTO NÃO ENCONTRADO!")
-    for i in estoqueadm:
-        if i["QUANTIDADE"]<5:
-            print(f'ALERTA!!!!!! O {i["PRODUTO"]} ESTÁ COM ESTOQUE BAIXO!')
 
 
 def regentrada(financeiro):

@@ -4,6 +4,7 @@ import funcadm
 import funcusuario
 import bibliotecas
 import questionary
+import assistentedeia
 print("-"*50)
 print("Sistema de Gestão Agropecuária (Fazenda Sertão)".upper())
 
@@ -19,6 +20,7 @@ financeiro=[]
 vacina=[]
 retiradas=[]
 carac_especiais= "!@#$%&*()-_=+[]{}|;:,.<>?/"
+
 propostas=[]
 compras_cliente=[]
 historico=[]
@@ -65,6 +67,7 @@ while iniciar!=0:
                     "Retiradas",
                     "Relatórios",
                     "Propostas",
+                    "ASSISTENTE DE IA",
                     "Sair"]).ask()
                     if menuadm=="Sair":
                         break
@@ -105,6 +108,7 @@ while iniciar!=0:
                             elif op_vacinas=="VOLTAR":
                                 continue
                     elif menuadm=="Produção/Estoque":
+                            bibliotecas.alertaestoquebaixo(estoqueadm)
                             opestoque=questionary.select("GESTÃO PRODUÇÃO", choices=[
                                 "ADICIONAR AO ESTOQUE",
                                 "REMOVER DO ESTOQUE",
@@ -116,7 +120,7 @@ while iniciar!=0:
                                 "RELATORIO EM PDF DO ESTOQUE",
                                 "VOLTAR"
                             ]).ask()
-                            bibliotecas.alertaestoquebaixo(estoqueadm, limite=5)
+
                             print()
                             if opestoque=="ADICIONAR AO ESTOQUE":
                                 funcadm.addestoque(estoqueadm)
@@ -126,7 +130,7 @@ while iniciar!=0:
                                 funcadm.atualizarproduto(estoqueadm)
                             elif opestoque=="LISTAR PRODUTOS":
                                 funcadm.listarestoqueadm(estoqueadm)
-                            elif opestoque=="ADICIONAR PRODUÇÃO DIARIA":
+                            elif opestoque=="ADICIONAR PRODUÇÃO DIÁRIA":
                                 funcadm.prodiaria(estoqueadm)
                             elif opestoque=="RELATORIO EM PDF DO ESTOQUE":
                                 bibliotecas.pdf_relatorio_estoque(estoqueadm)
@@ -191,43 +195,41 @@ RETIRADAS
                             continue
 
                     elif menuadm=="Relatórios":
-                        print("-"*30)
-                        print("RELATORIOS")
-                        print("-"*30)
-                        print("01-RELATÓRIO REBANHO")
-                        print("02-RELATÓRIO DO ESTOQUE")
-                        print("03-RELATÓRIO FINANCEIRO")
-                        print("04-RELÁTORIO RETIRADAS")
-                        print("05-RELATÓRIOS VACINAS")
-                        print("06-VOLTAR")
-                        print("-"*30)
-                        op_relatorio=int(input("DIGITE A OPÇÃO DESEJADA:"))
-                        if op_relatorio==1:
+                        op_relatorio=questionary.select("RELATORIO", choices=[
+                            "RELATORIO REBANHO",
+                            "RELATORIO ESTOQUE",
+                            "RELATORIO FINANCEIRO",
+                            "RELATORIO RETIRADAS",
+                            "RELATORIO VACINAS"
+                            "VOLTAR"
+                        ]).ask()
+                        if op_relatorio=="RELATORIO REBANHO":
                            funcadm.listarrebanho(rebanho)
-                        elif op_relatorio==2:
+                        elif op_relatorio=="RELATORIO ESTOQUE":
                             funcadm.listarestoqueadm(estoqueadm)
-                        elif op_relatorio==3:
+                        elif op_relatorio=="RELATORIO FINANCEIRO":
                             bibliotecas.pdf_relatorio_financeiro(financeiro)
-                        elif op_relatorio==4:
+                        elif op_relatorio=="RELATORIO RETIRADA":
                             funcadm.listar_retirada(retiradas)
-                        elif op_relatorio==5:
+                        elif op_relatorio=="RELATORIO VACINAS":
                             bibliotecas.pdf_relatorio_vacina(vacina)
-                    elif menuadm=="Propostas":
-                        print("-"*30)
-                        print("GESTÃO DE PROPOSTAS")
-                        print("-"*30)
-                        print("01-VER PROPOSTAS RECEBIDAS")
-                        print("02-RESPONDER PROPOSTA")
-                        print("03-VOLTAR")
-                        
-                        op_proposta=int(input("DIGITE A OPÇÃO DESEJADA: "))
-                        if op_proposta==1:
-                            funcadm.ver_propostas(propostas)
-                        elif op_proposta==2:
-                            funcadm.confirm_proposta(propostas)
-                        elif op_proposta==3:
+                        elif op_relatorio=="VOLTAR":
                             continue
-                    elif menuadm==7:
+                    elif menuadm=="Propostas":
+                        op_proposta=questionary.select("PROPOSTAS", choices=[
+                            "VER PROPOSTAS",
+                            "RESPONDER PROPOSTA",
+                            "VOLTAR"
+                        ]).ask()
+                        if op_proposta=="VER PROPOSTAS":
+                            funcadm.ver_propostas(propostas)
+                        elif op_proposta=="RESPONDER PROPOSTA":
+                            funcadm.confirm_proposta(propostas)
+                        elif op_proposta=="VOLTAR":
+                            continue
+                    elif menuadm=="ASSISTENTE DE IA":
+                        assistentedeia.assistentedeia(rebanho, estoqueadm, financeiro, vacina,retiradas)
+                    elif menuadm=="SAIR":
                         break
 
                             

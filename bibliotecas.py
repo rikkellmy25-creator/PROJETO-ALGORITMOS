@@ -1,24 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-relatorios.py - Relatórios avançados (Pandas + Plotly + ReportLab)
 
-Trabalha sobre as MESMAS listas de dicionários do sistema:
-  financeiro -> {"VALOR", "DESCRICAO", "TIPO"}   (TIPO: "ENTRADA"/"SAIDA")
-  estoqueadm -> {"ID", "PRODUTO", "QUANTIDADE", "PESO", "VALOR", "VALIDADE"}
-  historico  -> {"data", "acao", "item", "qtd"}   (do R13)
-
-Pacotes externos:
-  - pandas   : organiza/agrega os dados (totais, agrupamentos)
-  - plotly   : gera gráficos interativos (HTML)
-  - reportlab: exporta relatório em PDF
-  - pyttsx3  : lê resumos e alertas em voz alta (offline, sem internet)
-
-Instale antes de rodar:
-  pip install pandas plotly reportlab pyttsx3
-
-Obs.: no Linux o pyttsx3 depende do espeak ->  sudo apt install espeak
-      no Windows e macOS já funciona sem instalar nada a mais.
-"""
+# pip install pandas plotly reportlab pyttsx3 ollama
 
 import pandas as pd
 import plotly.express as px
@@ -30,9 +11,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 
 
-# ----------------------- PYTTSX3 (voz) -----------------------
 def falar(texto):
-    """Lê o texto em voz alta (offline). Não quebra o programa se não houver áudio."""
     engine = pyttsx3.init()
     engine.setProperty("rate", 170)
     for voz in engine.getProperty("voices"):
@@ -40,9 +19,8 @@ def falar(texto):
         if "portug" in nome or "brazil" in nome or "brasil" in nome:
             engine.setProperty("voice", voz.id)
             break
-        engine.say(texto)
-        engine.runAndWait()
-        engine.stop()
+    engine.say(texto)
+    engine.runAndWait()
 
 def alertaestoquebaixo(estoqueadm, limite=5):
     estoque_baixo = [i["PRODUTO"] for i in estoqueadm if i["QUANTIDADE"] < limite]
